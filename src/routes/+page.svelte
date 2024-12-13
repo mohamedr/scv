@@ -28,11 +28,11 @@
 
 <style lang="scss">
 	:root {
-		background-color: #4665cb;
+		background-color: var(--scv-blue);
 	}
 
 	main {
-		background-color: #f84e45;
+		background-color: var(--scv-red);
 		color: white;
 
 		.landing {
