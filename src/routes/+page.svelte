@@ -1,10 +1,15 @@
 <main>
 	<section class="landing">
 		<div>
+			<img 
+				class="logo" 
+				src="/scv_logo.jpg" 
+				alt="Logo Sambo Club Vedasien"
+			/>
 			<div class="heading">
 				<div class="location">
 					<iconify-icon icon="fa6-solid:location-dot"></iconify-icon>
-					<p>1-19 Av. de la Libération <br /> <span>Saint-Jean-de-Védas</span></p>
+					<p>Gymnase de la Combe<br />1-19 Av. de la Libération <br /> <span>Saint-Jean-de-Védas</span></p>
 				</div>
 				<h1>
 					Sambo
@@ -23,11 +28,11 @@
 
 <style lang="scss">
 	:root {
-		background-color: #02134d;
+		background-color: #4665cb;
 	}
 
 	main {
-		background-color: #030f3b;
+		background-color: #f84e45;
 		color: white;
 
 		.landing {
@@ -35,34 +40,55 @@
 			grid-template-columns: 0.9fr 1fr;
 			height: 90vh;
 			max-height: 52rem;
-
 			position: relative;
+			overflow: hidden;
 
-			.location {
-				display: flex;
-				align-items: center;
-				gap: 1rem;
-				font-size: 1.15rem;
-				font-weight: 400;
+			&::before {
+				content: '';
+				position: absolute;
+				width: 40rem;
+				height: 40rem;
+				top: -20rem;
+				left: -10rem;
+				background: linear-gradient(120deg, #4665cb 35%, #f84e45 65%);
+				border-radius: 50%;
+				z-index: 1;
+			}
 
-				iconify-icon {
-					font-size: 2.5rem;
-				}
+			.logo {
+				width: 160px;
+				height: auto;
+				margin: 0.5rem 8rem;
 
-				span {
-					font-size: 1rem;
-					font-weight: 300;
-					font-style: italic;
-				}
+				position: relative;
+				z-index: 2;
 			}
 
 			.heading {
 				position: absolute;
 
-				top: 50%;
+				top: 55%;
 				left: 40%;
 
 				translate: -50% -50%;
+
+				.location {
+					display: inline-flex;
+					align-items: center;
+					gap: 1rem;
+					font-size: 1.15rem;
+					font-weight: 400;
+
+					iconify-icon {
+						font-size: 2.5rem;
+					}
+
+					span {
+						font-size: 1rem;
+						font-weight: 300;
+						font-style: italic;
+					}
+				}
 
 				h1 {
 					font-size: 6rem;
