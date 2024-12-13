@@ -1,5 +1,6 @@
 <script>
 	import { dev } from '$app/environment';
+	import { snacks } from '$lib/components/Snacks.svelte';
 	import { api } from '$lib/functions/api';
 	import { expoOut } from 'svelte/easing';
 	import { slide } from 'svelte/transition';
@@ -29,6 +30,7 @@
 
 			// success
 			console.log(response);
+			snacks.success('Ayoooo');
 		} catch (error) {
 			errors = error;
 		} finally {
