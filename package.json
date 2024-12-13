@@ -26,6 +26,7 @@
 	},
 	"dependencies": {
 		"@sveltejs/adapter-vercel": "^5.5.2",
-		"iconify-icon": "^2.2.0"
+		"iconify-icon": "^2.2.0",
+		"myshades": "^1.1.0"
 	}
 }

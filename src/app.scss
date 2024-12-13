@@ -1,3 +1,5 @@
+@use './colors';
+
 :root {
 	--scv-red: #f84e45;
 	--scv-blue: #4665cb;
@@ -58,4 +60,19 @@ img {
 
 	min-height: 0;
 	min-width: 0;
+}
+
+button {
+	cursor: pointer;
+	border: none;
+	padding: 0.5rem 0.75rem;
+	border-radius: 0.5rem;
+
+	background-color: var(--color-100);
+	color: var(--on-color-100);
+
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	justify-content: center;
 }
