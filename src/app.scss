@@ -22,7 +22,7 @@
 *::after,
 *::before {
 	font-family: inherit;
-	color: inherit;
+	color: var(--on-color-50);
 
 	padding: 0;
 	margin: 0;
@@ -43,6 +43,11 @@ textarea {
 
 	&:focus {
 		outline-width: 3px;
+	}
+
+	&:disabled {
+		opacity: 0.75;
+		pointer-events: none;
 	}
 }
 
@@ -75,4 +80,9 @@ button {
 	align-items: center;
 	gap: 0.5rem;
 	justify-content: center;
+
+	&:disabled {
+		pointer-events: none;
+		opacity: 0.5;
+	}
 }
