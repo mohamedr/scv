@@ -49,3 +49,10 @@ ul,
 ol {
 	list-style: none;
 }
+
+img {
+	display: block;
+
+	min-height: 0;
+	min-width: 0;
+}

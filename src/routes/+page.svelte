@@ -34,6 +34,7 @@
 			display: grid;
 			grid-template-columns: 0.9fr 1fr;
 			height: 90vh;
+			max-height: 52rem;
 
 			position: relative;
 
