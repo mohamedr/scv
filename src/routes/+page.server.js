@@ -1,5 +1,8 @@
+import { MONGO_URI } from '$env/static/private';
 import { db } from '$lib/server/db';
 import { error } from '@sveltejs/kit';
+
+export const load = () => ({ MONGO_URI });
 
 /**
  * @type {import("./$types").Actions}
@@ -25,9 +28,5 @@ export const actions = {
 			archived: false,
 			date: new Date()
 		});
-
-		return {
-			data: 'Some data'
-		};
 	}
 };

@@ -6,13 +6,13 @@ import { error } from '@sveltejs/kit';
 const mongodb = new MongoClient(MONGO_URI);
 const scv = mongodb.db('scv');
 
-const messages = () => scv.collection('messages');
-const users = () => scv.collection('users');
+const messages = scv.collection('messages');
+const users = scv.collection('users');
 
 export const db = {
 	messages: {
 		async find() {
-			const out = await messages().find().toArray();
+			const out = await messages.find().toArray();
 			return out.map((doc) => ({
 				_id: doc._id.toString(),
 				email: doc.email,
@@ -26,19 +26,16 @@ export const db = {
 		/**
 		 * @param {import('mongodb').Filter<import('mongodb').Document>} filters
 		 */
-		findOne: (filters) => messages().findOne(filters),
+		findOne: (filters) => messages.findOne(filters),
 
-		/**
-		 * @param {import('mongodb').Filter<import('mongodb').Document>} filters
-		 * @param {import('mongodb').UpdateFilter<import('mongodb').Document>} updates
-		 */
-		updateOne: (filters, updates) => messages().updateOne(filters, updates),
+		/** @type {typeof messages.updateOne} */
+		updateOne: (...args) => messages.updateOne(...args),
 
 		/**
 		 * @param {*} doc
 		 */
 		insertOne(doc) {
-			return messages().insertOne(doc);
+			return messages.insertOne(doc);
 		}
 	},
 	users: {
@@ -47,7 +44,7 @@ export const db = {
 		 * @param {string} pass
 		 */
 		async findAndVerify(username, pass) {
-			const user = await users().findOne({ username, roles: 'admin' });
+			const user = await users.findOne({ username, roles: 'admin' });
 			if (!user) throw error(404, 'Utilisateur non trouvé');
 
 			const correct = await password.verify(user.password, pass);
@@ -57,7 +54,7 @@ export const db = {
 		},
 
 		async findOneAdmin() {
-			const admin = await users().findOne({
+			const admin = await users.findOne({
 				roles: 'admin'
 			});
 
@@ -75,11 +72,11 @@ export const db = {
 				throw error(400, `Le nom d'utilisateur doit faire au moins 4 caractères.`);
 			if (pass.length < 4) throw error(400, 'Le mot de passe doit faire au moins 4 caractères.');
 
-			const user = await users().findOne({ username });
+			const user = await users.findOne({ username });
 
 			if (user) throw error(400, `Ce nom d'utilisateur est déjà pris.`);
 
-			await users().insertOne({
+			await users.insertOne({
 				roles: ['admin'],
 				username,
 				password: await password.hash(pass)
@@ -90,7 +87,7 @@ export const db = {
 		 * @param {string} _id
 		 */
 		findById(_id) {
-			return users().findOne({ _id: new ObjectId(_id) });
+			return users.findOne({ _id: new ObjectId(_id) });
 		}
 	}
 };
