@@ -3,6 +3,8 @@
 	import girl_src from './images/masters/girl.avif';
 	import man_src from './images/masters/man.avif';
 
+	import pdf_download_link from './images/signin.jpg';
+
 	const masters = [
 		{
 			avatar: man_src,
@@ -20,6 +22,14 @@
 			text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'
 		}
 	];
+
+	function download() {
+		const link = document.createElement('a');
+		link.download = 'fiche_inscription';
+		link.href = pdf_download_link;
+		link.click();
+		link.remove();
+	}
 </script>
 
 <div class="container">
@@ -27,7 +37,7 @@
 		Lorem ipsum dolor sit amet consectetur adipisicing elit. molestiae architecto optio. Lorem ipsum
 		dolor sit amet
 	</p>
-	<button>
+	<button on:click={download}>
 		<iconify-icon icon="fa6-solid:download"></iconify-icon>
 		Télécharger la fiche d'inscription
 	</button>
