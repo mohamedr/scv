@@ -1,12 +1,6 @@
 import { db } from '$lib/server/db';
 import { error } from '@sveltejs/kit';
 
-export const load = async () => {
-	const messages = await db.messages.find();
-
-	return { messages: messages.length };
-};
-
 /**
  * @type {import("./$types").Actions}
  */

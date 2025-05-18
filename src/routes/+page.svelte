@@ -10,10 +10,6 @@
 	 * @type {HTMLElement}
 	 */
 	let schedulesSection;
-
-	let { data } = $props();
-
-	console.log(data);
 </script>
 
 <main>
