@@ -27,7 +27,9 @@
 	"dependencies": {
 		"@sveltejs/adapter-vercel": "^5.5.2",
 		"iconify-icon": "^2.2.0",
+		"jsonwebtoken": "^9.0.2",
 		"luxon": "^3.6.1",
+		"mongodb": "^6.16.0",
 		"myshades": "^1.1.0"
 	}
 }

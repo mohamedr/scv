@@ -1,3 +1,4 @@
+import { db } from '$lib/server/db';
 import { error } from '@sveltejs/kit';
 
 /**
@@ -9,19 +10,21 @@ export const actions = {
 		const payload = {
 			firstname: /** @type {string} */ (form.get('firstname')),
 			lastname: /** @type {string} */ (form.get('lastname')),
-			subject: /** @type {string} */ (form.get('subject')),
+			email: /** @type {string} */ (form.get('email')),
 			message: /** @type {string} */ (form.get('message'))
 		};
 
-		console.log(payload);
-
-		await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait 2s
-
-		if (payload.subject.length <= 2) {
+		if (payload.message.length <= 2) {
 			throw error(400, {
 				message: 'Le sujet doit faire plus de 2 caractères.'
 			});
 		}
+
+		await db.messages.insertOne({
+			...payload,
+			archived: false,
+			date: new Date()
+		});
 
 		return {
 			data: 'Some data'

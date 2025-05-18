@@ -1,14 +1,14 @@
 <script>
 	import khamzat_chimaev_src from './images/masters/khamzat-chimaev.jpg';
-	import girl_src from './images/masters/girl.avif';
-	import man_src from './images/masters/man.avif';
+	import julien_src from './images/masters/julien.jpg';
+	import olivier_src from './images/masters/olivier_duhouvre.jpg';
 
-	import pdf_download_link from './images/signin.jpg';
+	import pdf_download_link from './images/signin.pdf';
 
 	const masters = [
 		{
-			avatar: man_src,
-			name: 'Olivier Caca',
+			avatar: olivier_src,
+			name: 'Olivier Duhouvre',
 			text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'
 		},
 		{
@@ -17,15 +17,15 @@
 			text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'
 		},
 		{
-			avatar: girl_src,
-			name: 'Mange merde',
+			avatar: julien_src,
+			name: 'Julien',
 			text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'
 		}
 	];
 
 	function download() {
 		const link = document.createElement('a');
-		link.download = 'fiche_inscription';
+		link.download = 'fiche_inscription_scv';
 		link.href = pdf_download_link;
 		link.click();
 		link.remove();
@@ -83,10 +83,11 @@
 
 			.master {
 				display: flex;
+				align-items: center;
 				gap: 1rem;
 
 				img {
-					$size: 3rem;
+					$size: 4rem;
 					width: $size;
 					height: $size;
 
@@ -98,7 +99,8 @@
 				}
 
 				.infos {
-					display: grid;
+					display: flex;
+					flex-direction: column;
 					gap: 0.35rem;
 
 					.name {
@@ -126,6 +128,17 @@
 			button {
 				width: max-content;
 				margin-inline: auto;
+			}
+
+			.masters {
+				.master {
+					img {
+						$size: 5rem;
+
+						height: $size;
+						width: $size;
+					}
+				}
 			}
 		}
 	}

@@ -14,7 +14,7 @@
 	let payload = $state({
 		firstname: '',
 		lastname: '',
-		subject: '',
+		email: '',
 		message: ''
 	});
 
@@ -26,11 +26,14 @@
 		submitting = true;
 
 		try {
-			const response = await api.action('?/sendEmail', payload);
+			await api.action('?/sendEmail', payload);
 
-			// success
-			console.log(response);
-			snacks.success('Ayoooo');
+			payload.firstname = '';
+			payload.lastname = '';
+			payload.email = '';
+			payload.message = '';
+
+			snacks.success('Votre message à bien été envoyé !', 'Merci');
 		} catch (error) {
 			errors = error;
 		} finally {
@@ -68,10 +71,10 @@
 		/>
 
 		<input
-			type="text"
-			placeholder="Sujet"
-			name="subject"
-			bind:value={payload.subject}
+			type="email"
+			placeholder="Votre email"
+			name="email"
+			bind:value={payload.email}
 			required
 			disabled={submitting}
 		/>
@@ -111,7 +114,7 @@
 		grid-template-areas:
 			'details details'
 			'lastname firstname'
-			'subject subject'
+			'email email'
 			'message message'
 			'submit submit';
 	}
@@ -128,8 +131,8 @@
 		grid-area: lastname;
 	}
 
-	[name='subject'] {
-		grid-area: subject;
+	[name='email'] {
+		grid-area: email;
 	}
 
 	[name='message'] {

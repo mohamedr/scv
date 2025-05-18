@@ -53,6 +53,11 @@
 		/** @param {string} message */
 		danger(message, title = 'Oops') {
 			push({ type: 'danger', title, message });
+		},
+
+		/** @param {any} error */
+		error(error, title = 'Erreur') {
+			snacks.danger(error.message, title);
 		}
 	};
 </script>
