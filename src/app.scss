@@ -38,8 +38,11 @@ textarea {
 
 	border: 1px solid var(--color-200);
 	outline: 0px solid var(--color-100);
+	min-width: 0;
 
 	transition: outline-width 75ms linear;
+
+	color: var(--on-color-50);
 
 	&:focus {
 		outline-width: 3px;
@@ -48,6 +51,11 @@ textarea {
 	&:disabled {
 		opacity: 0.75;
 		pointer-events: none;
+	}
+
+	&::placeholder {
+		color: inherit;
+		opacity: 0.5;
 	}
 }
 

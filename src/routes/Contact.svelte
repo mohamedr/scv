@@ -12,10 +12,10 @@
 
 	let submitting = $state(false);
 	let payload = $state({
-		firstname: dev ? 'Maxime' : '',
-		lastname: dev ? 'Di Natale' : '',
-		subject: dev ? 'Sujet' : '',
-		message: dev ? 'Mon message' : ''
+		firstname: '',
+		lastname: '',
+		subject: '',
+		message: ''
 	});
 
 	/**
@@ -39,8 +39,10 @@
 	}
 </script>
 
-<main>
+<div class="container">
 	<h1>Contact</h1>
+
+	<p>Bla bla bla lorem lorem et tout</p>
 
 	<form onsubmit={submit}>
 		{#if errors}
@@ -75,7 +77,7 @@
 		/>
 
 		<textarea
-			rows="12"
+			rows="8"
 			placeholder="Écrivez votre message ici"
 			name="message"
 			required
@@ -88,15 +90,19 @@
 			Envoyer
 		</button>
 	</form>
-</main>
+</div>
 
 <style>
 	h1 {
-		margin-bottom: 1rem;
+		margin-bottom: 0.5rem;
 	}
 
-	main {
-		padding: 4rem;
+	.container {
+		padding: 2rem;
+
+		> p {
+			margin-bottom: 1rem;
+		}
 	}
 
 	form {
@@ -132,5 +138,11 @@
 
 	button[type='submit'] {
 		grid-area: submit;
+	}
+
+	@media screen and (min-width: 768px) {
+		.container {
+			padding-inline: 20vw;
+		}
 	}
 </style>
