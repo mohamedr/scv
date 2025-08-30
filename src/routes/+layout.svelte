@@ -7,6 +7,10 @@
 	let { children } = $props();
 </script>
 
+<svelte:head>
+	<title>SCV</title>
+</svelte:head>
+
 <Snacks />
 
 {@render children()}
