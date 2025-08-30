@@ -15,7 +15,7 @@
 	<h1>
 		Sambo
 		<br />
-		Club Vedasien
+		Club Védasien
 	</h1>
 	<div class="location">
 		<iconify-icon icon="fa6-solid:location-dot"></iconify-icon>
