@@ -24,7 +24,11 @@
 			<span>Saint-Jean-de-Védas</span>
 		</p>
 	</div>
-	<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. molestiae architecto optio.</p>
+	<p>
+		Le SCV est un club dynamique qui propose de faire de la compétition ou juste du loisir. Un club
+		à l’esprit familial. Entraide, respect, dépassement de soi sont nos mots d’ordres. Rejoignez
+		nous et révélez votre potentiel sur le tapis.
+	</p>
 	<div class="buttons">
 		<button onclick={onsee}>
 			<iconify-icon icon="fa6-solid:calendar"></iconify-icon>

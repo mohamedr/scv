@@ -1,7 +1,5 @@
 <footer>
-	<p>Footer de fou</p>
-	<p>Footer de fou</p>
-	<p>Footer de fou</p>
+	<p>Site fait avec amour</p>
 </footer>
 
 <style>

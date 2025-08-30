@@ -1,5 +1,5 @@
 <script>
-	import khamzat_chimaev_src from './images/masters/khamzat-chimaev.jpg';
+	import pavel_src from './images/masters/pavel.png';
 	import julien_src from './images/masters/julien.jpg';
 	import olivier_src from './images/masters/olivier_duhouvre.jpg';
 
@@ -9,17 +9,29 @@
 		{
 			avatar: olivier_src,
 			name: 'Olivier Duhouvre',
-			text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'
+			text: `Enseignant principal du club
+
+Initiateur sambo CFS, animateur sambo FFL
+
+Champion de france sambo sportif et combat master,
+5e championnat du monde 2012,
+1ere dan sambo sportif combat et défense`
 		},
 		{
-			avatar: khamzat_chimaev_src,
-			name: 'Khamzat Chimeav',
-			text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'
+			avatar: pavel_src,
+			name: 'Pavel',
+			text: `2e au championnat régional Occitanie par équipe.
+
+Initiateur sambo CFS`
 		},
 		{
 			avatar: julien_src,
 			name: 'Julien',
-			text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'
+			text: `Champion régional sambo sportif 2025
+
+3e au championnat de France 2025
+
+2e au championnat par équipe 2025. Initiateur sambo CFS`
 		}
 	];
 
@@ -33,22 +45,20 @@
 </script>
 
 <div class="container">
-	<p>
-		Lorem ipsum dolor sit amet consectetur adipisicing elit. molestiae architecto optio. Lorem ipsum
-		dolor sit amet
-	</p>
+	<p>Cliquez sur le bouton pour télécharger la fiche d'inscription à imprimer et à compléter.</p>
+	<p>Il faudra venir avec.</p>
 	<button on:click={download}>
 		<iconify-icon icon="fa6-solid:download"></iconify-icon>
 		Télécharger la fiche d'inscription
 	</button>
 
 	<div class="masters">
-		<p class="title">L'équipe</p>
+		<p class="title">L'équipe enseignante</p>
 
 		<div class="list">
 			{#each masters as master}
 				<div class="master">
-					<img src={master.avatar} />
+					<img src={master.avatar} alt="" />
 					<div class="infos">
 						<div class="name">{master.name}</div>
 						<p>{master.text}</p>
@@ -73,6 +83,7 @@
 			.list {
 				display: flex;
 				flex-direction: column;
+				justify-content: center;
 				gap: 2rem;
 			}
 
@@ -83,11 +94,11 @@
 
 			.master {
 				display: flex;
-				align-items: center;
+				align-items: flex-start;
 				gap: 1rem;
 
 				img {
-					$size: 4rem;
+					$size: 6rem;
 					width: $size;
 					height: $size;
 
@@ -95,7 +106,7 @@
 
 					flex-shrink: 0;
 
-					border-radius: 50%;
+					border-radius: 1rem;
 				}
 
 				.infos {
@@ -110,6 +121,7 @@
 					p {
 						font-size: 0.8rem;
 						font-weight: 300;
+						white-space: pre-wrap;
 						opacity: 0.8;
 					}
 				}
@@ -119,7 +131,7 @@
 
 	@media screen and (min-width: 768px) {
 		.container {
-			padding: 10vw 20vw;
+			padding: 10vw 10vw;
 
 			> p {
 				text-align: center;
@@ -133,10 +145,8 @@
 			.masters {
 				.master {
 					img {
-						$size: 5rem;
-
-						height: $size;
-						width: $size;
+						height: 6rem;
+						width: 5rem;
 					}
 				}
 			}

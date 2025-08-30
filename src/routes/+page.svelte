@@ -54,6 +54,10 @@
 				grid-template-rows: auto 1fr;
 			}
 
+			&.second {
+				height: auto;
+			}
+
 			&.contact {
 				grid-template-rows: 1fr auto;
 			}

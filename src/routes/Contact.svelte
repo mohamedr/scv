@@ -45,7 +45,7 @@
 <div class="container">
 	<h1>Contact</h1>
 
-	<p>Bla bla bla lorem lorem et tout</p>
+	<p>Veuillez remplir le formulaire pour toute demande d'informations.</p>
 
 	<form onsubmit={submit}>
 		{#if errors}
