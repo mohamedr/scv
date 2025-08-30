@@ -1,5 +1,5 @@
 <footer>
-	<p>Site fait avec amour</p>
+	<p>PivoMed Design 2025 tous droits réservés</p>
 </footer>
 
 <style>

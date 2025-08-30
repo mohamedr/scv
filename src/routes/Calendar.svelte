@@ -1,5 +1,4 @@
 <script>
-
 	const oneMinute = 1000 * 60;
 	const oneHour = oneMinute * 60;
 	const oneDay = oneHour * 24;
@@ -23,11 +22,13 @@
 			name: 'Mardi',
 			events: [
 				{
+					id: 'young',
 					title: 'Enfants',
 					start: oneHour * 17 + oneMinute * 45,
 					end: oneHour * 18 + oneMinute * 45
 				},
 				{
+					id: 'adult',
 					title: 'Adultes',
 					start: oneHour * 18 + oneMinute * 45,
 					end: oneHour * 20
@@ -42,14 +43,10 @@
 			name: 'Jeudi',
 			events: [
 				{
-					title: 'Enfants',
-					start: oneHour * 17 + oneMinute * 30,
-					end: oneHour * 18 + oneMinute * 30
-				},
-				{
+					id: 'adult',
 					title: 'Adultes',
-					start: oneHour * 18 + oneMinute * 30,
-					end: oneHour * 20
+					start: oneHour * 17 + oneMinute * 30,
+					end: oneHour * 19 + oneMinute * 30
 				}
 			]
 		},
@@ -61,6 +58,19 @@
 			name: 'Samedi',
 			events: [
 				{
+					id: 'baby',
+					title: 'Baby Sambo\n(4 / 5 ans)',
+					start: oneHour * 14,
+					end: oneHour * 15
+				},
+				{
+					id: 'young',
+					title: 'Enfants',
+					start: oneHour * 18,
+					end: oneHour * 19 + oneMinute * 30
+				},
+				{
+					id: 'adult',
 					title: 'Adultes',
 					start: oneHour * 18,
 					end: oneHour * 20
@@ -72,129 +82,112 @@
 			events: []
 		}
 	];
+
+	/** @type {Record<string, { fg: string; bg: string; }>} */
+	const themes = {
+		adult: {
+			bg: 'var(--scv-red)',
+			fg: 'white'
+		},
+		young: {
+			bg: 'var(--scv-blue)',
+			fg: 'white'
+		},
+		baby: {
+			bg: 'var(--scv-cyan)',
+			fg: 'white'
+		}
+	};
 </script>
 
-<div class="calendar">
-    <div class="columns">
-        <div class="col times">
-            <div class="head"></div>
-            {#each [...Array(25).keys()] as n}
-                <div class="cell time" style="--percent: {((n * oneHour) / oneDay) * 100}%">
-                    {(n % 24).toString().padStart(2, '0')}:00
-                </div>
-            {/each}
-        </div>
-        {#each week as day, weekIndex}
-            <div class="col">
-                <div class="head">
-                    {day.name}
-                </div>
-                {#each day.events as event, eventIndex}
-                    <div
-                        class="cell event"
-                        style="--start: {(event.start / oneDay) * 100}%; --end: {(event.end / oneDay) *
-                            100}%"
-                    >
-                        <p class="title">{event.title}</p>
-                        <p class="range">
-                            <iconify-icon icon="fa6-solid:clock"></iconify-icon>
-                            {tToH(event.start)} - {tToH(event.end)}
-                        </p>
-                    </div>
-                {/each}
-            </div>
-        {/each}
-    </div>
+<div class="container">
+	<h1>Horaires des entraînements</h1>
+
+	<div class="calendar">
+		{#each week as day}
+			<div class="day">
+				<div class="name">{day.name}</div>
+				<div class="events">
+					{#each day.events as event}
+						{@const theme = themes[event.id]}
+						<div class="event" style="--fg: {theme.fg}; --bg: {theme.bg}">
+							<div class="name">
+								{event.title}
+							</div>
+							<div class="time">
+								<div class="from">de {tToH(event.start)}</div>
+								-
+								<div class="to">à {tToH(event.end)}</div>
+							</div>
+						</div>
+					{/each}
+				</div>
+			</div>
+		{/each}
+	</div>
 </div>
 
 <style lang="scss">
-    .calendar {
-        height: 100%;
-        display: grid;
-        overflow: auto;
+	.container {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		height: 100%;
+	}
 
-        .columns {
-            display: grid;
-            grid-template-columns: auto repeat(7, calc(100vw - 7rem));
-            height: 200vh;
-            z-index: 0;
-            padding-top: 2rem;
+	h1 {
+		text-align: center;
+		margin-bottom: 2rem;
+	}
 
-            .col {
-                position: relative;
-                display: flex;
-                flex-direction: column;
-                border-right: 1px solid currentColor;
+	.calendar {
+		display: grid;
+		grid-template-columns: repeat(7, 1fr);
 
-                .head {
-                    height: 2rem;
-                    text-align: center;
-                    position: sticky;
-                    top: 0;
-                    translate: 0 -100%;
-                    background-color: var(--scv-red);
-                    border-bottom: 1px solid currentColor;
-                }
+		background-color: white;
+		color: black;
+		margin: 0 2rem;
+		padding: 1rem;
+		border-radius: 0.5rem;
 
-                &.times {
-                    font-size: 1rem;
-                    font-family: monospace;
-                    position: sticky;
-                    left: 0;
+		.day {
+			&:not(:last-child) {
+				border-right: 1px solid black;
+			}
 
-                    .head {
-                        width: 7rem;
-                        z-index: 10;
-                    }
-                }
+			> .name {
+				padding: 0.5rem;
+				text-align: center;
+				font-weight: 600;
+				border-bottom: 1px solid black;
+			}
 
-                .cell {
-                    &.time {
-                        position: absolute;
-                        left: 50%;
-                        top: var(--percent);
-                        translate: -50% -50%;
+			> .events {
+				> .event {
+					margin: 0.5rem;
+					padding: 0.5rem;
+					border-radius: 0.5rem;
 
-                        &::after {
-                            content: '';
-                            position: absolute;
-                            left: 5rem;
-                            top: var(--percent);
-                            width: calc((100vw - 7rem) * 7);
-                            height: 1px;
-                            background-color: currentColor;
-                            translate: 0 0.55rem;
-                            opacity: 0.5;
-                        }
-                    }
+					background-color: var(--bg);
+					color: var(--fg);
 
-                    &.event {
-                        position: absolute;
-                        left: 0.5rem;
-                        right: 0.5rem;
-                        background-color: rgba(0 0 255 / 25%);
-                        border-top: 2px solid white;
+					> .name {
+						font-weight: 500;
+						text-align: center;
+						margin-bottom: 1rem;
+						font-size: 1rem;
+						white-space: pre-wrap;
+					}
 
-                        top: var(--start);
-                        bottom: calc(100% - var(--end));
-                        border-radius: 0.4rem;
-
-                        padding: 0.5rem 1rem;
-
-                        .title {
-                            font-weight: 600;
-                            font-size: 1.1rem;
-                            margin-bottom: 0.25rem;
-                        }
-
-                        .range {
-                            display: flex;
-                            align-items: center;
-                            gap: 0.5rem;
-                        }
-                    }
-                }
-            }
-        }
-    }
+					> .time {
+						font-weight: 600;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						gap: 0.5rem;
+					}
+				}
+			}
+		}
+	}
 </style>
