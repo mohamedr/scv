@@ -42,8 +42,15 @@ Champion régional sambo sportif 2025
 </script>
 
 <div class="container">
-	<p>Prêt à rejoindre l’équipe ? Téléchargez la fiche d’inscription, remplissez-la et apportez-la au club.</p>
-	<p>Pour valider votre inscription, pensez aussi au certificat médical et aux autres documents nécessaires.</p>
+	<p>
+		<b>Prêt à rejoindre l’équipe&nbsp;?</b> 
+		Téléchargez la <b>fiche d’inscription</b>, remplissez-la et <b>apportez-la au club</b>.
+	</p>
+
+	<p>
+		Pour valider votre inscription, pensez aussi au <b>certificat médical</b> 
+		et aux autres documents nécessaires.
+	</p>
 	<button on:click={download}>
 		<iconify-icon icon="fa6-solid:download"></iconify-icon>
 		Télécharger la fiche d'inscription
@@ -65,7 +72,11 @@ Champion régional sambo sportif 2025
 		</div>
 	</div>
 	<p></p>
-	<p>En plus des entraînements réguliers, nous organisons régulièrement des stages pour vous faire évoluer encore plus vite, et nous accompagnons nos adhérents lors des compétitions pour partager ensemble l’esprit d’équipe.</p>
+	<p>
+  Au-delà des entraînements, le SCV organise des <b>stages</b> pour progresser plus vite 
+  et accompagne ses adhérents en <b>compétition</b>, toujours dans l’<b>esprit d’équipe</b>. 
+  Parce qu’ici, chaque <b>victoire</b> est <b>collective</b> et chaque adhérent compte.
+</p>
 </div>
 
 <style lang="scss">

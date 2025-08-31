@@ -25,9 +25,11 @@
 		</p>
 	</div>
 	<p>
-		Le SCV est un club dynamique qui propose de faire de la compétition ou juste du loisir. Un club
-		à l’esprit familial. Entraide, respect, dépassement de soi sont nos mots d’ordres. Rejoignez
-		nous et révélez votre potentiel sur le tapis.
+			Le <b>SCV</b>, c’est un club <b>dynamique</b> où chacun trouve sa place : 
+			en <b>compétition</b> comme en <b>loisir</b>. 
+			Dans un <b>esprit familial</b>, nous mettons en avant 
+			l’<b>entraide</b>, le <b>respect</b> et le <b>dépassement de soi</b>. 
+			Rejoignez-nous et venez révéler votre potentiel sur le tapis&nbsp;!
 	</p>
 	<div class="buttons">
 		<button onclick={onsee}>
