@@ -109,3 +109,12 @@ button {
 		rotate: 360deg;
 	}
 }
+html {
+	scroll-behavior: smooth;
+  }
+  
+  /* accessibilité : pas d’animation si l’utilisateur la réduit */
+  @media (prefers-reduced-motion: reduce) {
+	html { scroll-behavior: auto; }
+  }
+  

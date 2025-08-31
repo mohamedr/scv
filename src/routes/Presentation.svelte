@@ -10,9 +10,7 @@
 			avatar: olivier_src,
 			name: 'Olivier Duhouvre',
 			text: `Enseignant principal du club
-
 Initiateur sambo CFS, animateur sambo FFL
-
 Champion de france sambo sportif et combat master,
 5e championnat du monde 2012,
 1ere dan sambo sportif combat et défense`
@@ -20,18 +18,17 @@ Champion de france sambo sportif et combat master,
 		{
 			avatar: pavel_src,
 			name: 'Pavel',
-			text: `2e au championnat régional Occitanie par équipe.
-
-Initiateur sambo CFS`
+			text: `Initiateur sambo CFS
+2e au championnat régional Occitanie par équipe.
+`
 		},
 		{
 			avatar: julien_src,
 			name: 'Julien',
-			text: `Champion régional sambo sportif 2025
-
+			text: `Initiateur sambo CFS
+Champion régional sambo sportif 2025
 3e au championnat de France 2025
-
-2e au championnat par équipe 2025. Initiateur sambo CFS`
+2e au championnat par équipe 2025`
 		}
 	];
 
@@ -45,8 +42,8 @@ Initiateur sambo CFS`
 </script>
 
 <div class="container">
-	<p>Cliquez sur le bouton pour télécharger la fiche d'inscription à imprimer et à compléter.</p>
-	<p>Il faudra venir avec.</p>
+	<p>Prêt à rejoindre l’équipe ? Téléchargez la fiche d’inscription, remplissez-la et apportez-la au club.</p>
+	<p>Pour valider votre inscription, pensez aussi au certificat médical et aux autres documents nécessaires.</p>
 	<button on:click={download}>
 		<iconify-icon icon="fa6-solid:download"></iconify-icon>
 		Télécharger la fiche d'inscription
@@ -67,6 +64,8 @@ Initiateur sambo CFS`
 			{/each}
 		</div>
 	</div>
+	<p></p>
+	<p>En plus des entraînements réguliers, nous organisons régulièrement des stages pour vous faire évoluer encore plus vite, et nous accompagnons nos adhérents lors des compétitions pour partager ensemble l’esprit d’équipe.</p>
 </div>
 
 <style lang="scss">

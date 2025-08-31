@@ -13,20 +13,20 @@
 </script>
 
 <main>
-	<section class="landing">
+	<section id="accueil" class="landing">
 		<Hero onsee={() => schedulesSection.scrollIntoView({ behavior: 'smooth' })} />
 	</section>
 
-	<section class="second">
+	<section id="equipe" class="second">
 		<Carousel />
 		<Presentation />
 	</section>
 
-	<section class="pad-top" bind:this={schedulesSection}>
+	<section id="horaires" class="pad-top" bind:this={schedulesSection}>
 		<Calendar />
 	</section>
 
-	<section class="pad-top contact">
+	<section id="contact" class="pad-top contact">
 		<Contact />
 		<Footer />
 	</section>
