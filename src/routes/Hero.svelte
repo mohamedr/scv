@@ -20,8 +20,8 @@
 	<div class="location">
 		<iconify-icon icon="fa6-solid:location-dot"></iconify-icon>
 		<p>
-			Gymnase de la Combe<br />1-19 Av. de la Libération <br />
-			<span>Saint-Jean-de-Védas</span>
+			Gymnase de la Combe<br /><span class="street">Chemin de la Combe</span><br />
+			<span>34430 Saint-Jean-de-Védas</span>
 		</p>
 	</div>
 	<p>
