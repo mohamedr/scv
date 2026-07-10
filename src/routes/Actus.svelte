@@ -26,6 +26,14 @@
 	Actualités
 </h2>
 
+{#if !news.length}
+	<div class="empty">
+		<iconify-icon icon="fa6-regular:newspaper"></iconify-icon>
+		<p class="title">Pas encore d'actualité</p>
+		<p class="sub">Le club publiera bientôt ses news, résultats et événements ici. Revenez vite&nbsp;!</p>
+	</div>
+{/if}
+
 {#if highlight}
 	<a
 		class="highlight"
@@ -67,6 +75,38 @@
 <style lang="scss">
 	.section-title {
 		color: var(--scv-red);
+	}
+
+	.empty {
+		background: #fff;
+		border: 1px dashed var(--color-200);
+		border-radius: 1rem;
+		padding: clamp(2.5rem, 6vw, 4rem) 1.5rem;
+		text-align: center;
+
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.5rem;
+
+		iconify-icon {
+			font-size: 2.75rem;
+			color: var(--scv-red);
+			opacity: 0.55;
+			margin-bottom: 0.25rem;
+		}
+
+		.title {
+			font-size: 1.25rem;
+			font-weight: 700;
+			color: var(--color-800);
+		}
+
+		.sub {
+			max-width: 30rem;
+			color: var(--color-500);
+			line-height: 1.5;
+		}
 	}
 
 	/* ---- Article à la une (pleine largeur) ---- */

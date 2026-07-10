@@ -4,6 +4,7 @@
 	import pavel_src from './images/masters/pavel.png';
 	import julien_src from './images/masters/julien.jpg';
 	import olivier_src from './images/masters/olivier_duhouvre.jpg';
+	import jj_src from './images/masters/jean-jacques.jpg';
 
 	import pdf_download_link from './images/signin.pdf';
 
@@ -58,11 +59,11 @@ Champion régional sambo sportif 2025
 3e au championnat de France 2025
 2e au championnat par équipe 2025`
 		},
-		// --- Coach placeholder : à compléter (nom, palmarès, photo) ---
 		{
-			avatar: null,
-			name: 'Nouveau coach',
-			text: `Présentation à venir prochainement.`
+			avatar: jj_src,
+			name: 'Jean-Jacques Teilliet',
+			role: "Président d'honneur du club",
+			text: ''
 		}
 	];
 
@@ -77,7 +78,7 @@ Champion régional sambo sportif 2025
 
 <h2 class="section-title">
 	<iconify-icon icon="fa6-solid:people-group"></iconify-icon>
-	L'équipe enseignante
+	L'équipe
 </h2>
 
 <div class="team">
@@ -91,7 +92,12 @@ Champion régional sambo sportif 2025
 				</div>
 			{/if}
 			<div class="name">{master.name}</div>
-			<p>{master.text}</p>
+			{#if master.role}
+				<div class="role">{master.role}</div>
+			{/if}
+			{#if master.text}
+				<p>{master.text}</p>
+			{/if}
 		</article>
 	{/each}
 </div>
@@ -163,6 +169,12 @@ Champion régional sambo sportif 2025
 		.name {
 			font-weight: 700;
 			font-size: 1.15rem;
+		}
+
+		.role {
+			font-size: 0.85rem;
+			font-weight: 600;
+			color: var(--scv-blue);
 		}
 
 		p {

@@ -4,6 +4,7 @@
 	import Actus from './Actus.svelte';
 	import Carousel from './Carousel.svelte';
 	import Presentation from './Presentation.svelte';
+	import Valeurs from './Valeurs.svelte';
 	import Calendar from './Calendar.svelte';
 	import Contact from './Contact.svelte';
 	import Footer from './Footer.svelte';
@@ -23,17 +24,21 @@
 		<Hero onsee={() => schedulesSection.scrollIntoView({ behavior: 'smooth' })} />
 	</section>
 
-	{#if data.news.length}
-		<section id="actus" class="section band-light">
-			<div class="shell">
-				<Actus news={data.news} />
-			</div>
-		</section>
-	{/if}
+	<section id="actus" class="section band-light">
+		<div class="shell">
+			<Actus news={data.news} />
+		</div>
+	</section>
 
 	<section id="equipe" class="section band-blue">
 		<div class="shell">
 			<Presentation />
+		</div>
+	</section>
+
+	<section id="valeurs" class="section band-white">
+		<div class="shell">
+			<Valeurs />
 		</div>
 	</section>
 
