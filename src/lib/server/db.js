@@ -3,7 +3,12 @@ import { MongoClient, ObjectId } from 'mongodb';
 import { password } from './password';
 import { error } from '@sveltejs/kit';
 
-const mongodb = new MongoClient(MONGO_URI, { serverSelectionTimeoutMS: 5000 });
+// fail-fast : bascule en mode dégradé en ~5s si la base est injoignable
+// (au lieu du timeout de sélection de serveur par défaut, ~30s).
+const uri = MONGO_URI.includes('?')
+	? `${MONGO_URI}&serverSelectionTimeoutMS=5000`
+	: `${MONGO_URI}?serverSelectionTimeoutMS=5000`;
+const mongodb = new MongoClient(uri);
 const scv = mongodb.db('scv');
 
 const messages = scv.collection('messages');
@@ -199,10 +204,7 @@ export const db = {
 		 * Tri : l'article "à la une" d'abord, sinon les plus récentes.
 		 */
 		async findVisible() {
-			const out = await news
-				.find({ visible: true })
-				.sort({ featured: -1, date: -1 })
-				.toArray();
+			const out = await news.find({ visible: true }).sort({ featured: -1, date: -1 }).toArray();
 			return out.map(mapTeaser);
 		},
 
@@ -262,10 +264,7 @@ export const db = {
 		 * @param {boolean} visible
 		 */
 		async setVisible(_id, visible) {
-			const result = await news.updateOne(
-				{ _id: new ObjectId(_id) },
-				{ $set: { visible } }
-			);
+			const result = await news.updateOne({ _id: new ObjectId(_id) }, { $set: { visible } });
 
 			if (!result.matchedCount) throw error(404, `L'actualité n'a pas été trouvée.`);
 		},
