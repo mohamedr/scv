@@ -1,7 +1,6 @@
 <script>
 	const oneMinute = 1000 * 60;
 	const oneHour = oneMinute * 60;
-	const oneDay = oneHour * 24;
 
 	function tToH(milliseconds = 0) {
 		let m = (Math.floor(milliseconds / 1000 / 60) % 60).toString();
@@ -98,93 +97,174 @@
 			fg: 'white'
 		}
 	};
+
+	const groups = [
+		{ id: 'baby', label: 'Baby Sambo' },
+		{ id: 'young', label: 'Enfants' },
+		{ id: 'adult', label: 'Adultes' }
+	];
 </script>
 
-<div class="container">
-	<h1>Horaires des entraînements</h1>
+<h2 class="section-title">
+	<iconify-icon icon="fa6-solid:calendar-days"></iconify-icon>
+	Horaires des entraînements
+</h2>
 
-	<div class="calendar">
-		{#each week as day}
-			<div class="day">
-				<div class="name">{day.name}</div>
-				<div class="events">
-					{#each day.events as event}
-						{@const theme = themes[event.id]}
-						<div class="event" style="--fg: {theme.fg}; --bg: {theme.bg}">
-							<div class="name">
-								{event.title}
-							</div>
-							<div class="time">
-								<div class="from">de {tToH(event.start)}</div>
-								-
-								<div class="to">à {tToH(event.end)}</div>
-							</div>
+<div class="legend">
+	{#each groups as group}
+		<span class="chip" style="--bg: {themes[group.id].bg}">{group.label}</span>
+	{/each}
+</div>
+
+<div class="calendar">
+	{#each week as day}
+		<div class="day" class:empty={day.events.length === 0}>
+			<div class="name">{day.name}</div>
+			<div class="events">
+				{#each day.events as event}
+					{@const theme = themes[event.id]}
+					<div class="event" style="--fg: {theme.fg}; --bg: {theme.bg}">
+						<div class="title">{event.title}</div>
+						<div class="time">
+							<iconify-icon icon="fa6-solid:clock"></iconify-icon>
+							{tToH(event.start)} – {tToH(event.end)}
 						</div>
-					{/each}
-				</div>
+					</div>
+				{:else}
+					<div class="rest">Repos</div>
+				{/each}
 			</div>
-		{/each}
-	</div>
+		</div>
+	{/each}
 </div>
 
 <style lang="scss">
-	.container {
-		display: flex;
-		flex-direction: column;
+	.section-title {
+		color: var(--scv-red);
 		justify-content: center;
-		height: 100%;
 	}
 
-	h1 {
-		text-align: center;
+	.legend {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 1.25rem;
 		margin-bottom: 2rem;
+
+		.chip {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.5rem;
+			font-weight: 500;
+			font-size: 0.9rem;
+
+			&::before {
+				content: '';
+				width: 0.9rem;
+				height: 0.9rem;
+				border-radius: 999px;
+				background: var(--bg);
+			}
+		}
 	}
 
 	.calendar {
 		display: grid;
 		grid-template-columns: repeat(7, 1fr);
 
-		background-color: white;
-		color: black;
-		margin: 0 2rem;
-		padding: 1rem;
-		border-radius: 0.5rem;
+		background: #fff;
+		color: var(--color-900);
+		padding: 0.5rem;
+		border-radius: 1rem;
+		box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08);
 
 		.day {
+			display: flex;
+			flex-direction: column;
+
 			&:not(:last-child) {
-				border-right: 1px solid black;
+				border-right: 1px solid var(--color-100);
 			}
 
 			> .name {
-				padding: 0.5rem;
+				padding: 0.75rem 0.5rem;
 				text-align: center;
 				font-weight: 600;
-				border-bottom: 1px solid black;
+				border-bottom: 1px solid var(--color-100);
 			}
 
 			> .events {
-				> .event {
-					margin: 0.5rem;
-					padding: 0.5rem;
-					border-radius: 0.5rem;
+				flex: 1;
+				padding: 0.5rem 0;
 
-					background-color: var(--bg);
+				.event {
+					margin: 0.4rem;
+					padding: 0.6rem 0.5rem;
+					border-radius: 0.6rem;
+
+					background: var(--bg);
 					color: var(--fg);
+					text-align: center;
 
-					> .name {
-						font-weight: 500;
-						text-align: center;
-						margin-bottom: 1rem;
-						font-size: 1rem;
+					.title {
+						font-weight: 600;
+						margin-bottom: 0.5rem;
+						font-size: 0.95rem;
 						white-space: pre-wrap;
 					}
 
-					> .time {
-						font-weight: 600;
+					.time {
 						display: flex;
 						align-items: center;
 						justify-content: center;
-						gap: 0.5rem;
+						gap: 0.35rem;
+						font-weight: 600;
+						font-size: 0.85rem;
+					}
+				}
+
+				.rest {
+					text-align: center;
+					padding: 1rem 0.5rem;
+					font-style: italic;
+					font-size: 0.8rem;
+					color: var(--color-300);
+				}
+			}
+		}
+	}
+
+	/* mobile : on empile et on masque les jours de repos */
+	@media (max-width: 760px) {
+		.calendar {
+			grid-template-columns: 1fr;
+			padding: 0.75rem;
+
+			.day {
+				&:not(:last-child) {
+					border-right: none;
+				}
+
+				&.empty {
+					display: none;
+				}
+
+				> .name {
+					text-align: left;
+					font-size: 1.05rem;
+					border-bottom: none;
+					padding-bottom: 0.25rem;
+				}
+
+				> .events {
+					display: grid;
+					grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+					gap: 0.5rem;
+					padding-top: 0;
+					padding-bottom: 1rem;
+
+					.event {
+						margin: 0;
 					}
 				}
 			}

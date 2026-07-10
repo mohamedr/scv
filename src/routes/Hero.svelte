@@ -32,35 +32,14 @@
 			Rejoignez-nous et venez révéler votre potentiel sur le tapis&nbsp;!
 	</p>
 	<div class="buttons">
-		<button onclick={onsee}>
+		<button class="btn-primary" onclick={onsee}>
 			<iconify-icon icon="fa6-solid:calendar"></iconify-icon>
 			Voir les horaires
 		</button>
 	</div>
 </div>
 
-<nav>
-	<img class="logo" src="/scv_logo.jpg" alt="" />
-</nav>
-
 <style lang="scss">
-	nav {
-		position: fixed;
-
-		z-index: 10;
-
-		top: 1rem;
-		left: 1rem;
-
-		.logo {
-			width: 5rem;
-			height: auto;
-
-			z-index: 2;
-			border-radius: 0.5rem;
-		}
-	}
-
 	.heading {
 		position: absolute;
 

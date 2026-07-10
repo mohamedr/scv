@@ -1,10 +1,14 @@
 <script>
+	import Nav from './Nav.svelte';
+	import Hero from './Hero.svelte';
+	import Actus from './Actus.svelte';
 	import Carousel from './Carousel.svelte';
 	import Presentation from './Presentation.svelte';
 	import Calendar from './Calendar.svelte';
 	import Contact from './Contact.svelte';
 	import Footer from './Footer.svelte';
-	import Hero from './Hero.svelte';
+
+	let { data } = $props();
 
 	/**
 	 * @type {HTMLElement}
@@ -12,59 +16,50 @@
 	let schedulesSection;
 </script>
 
+<Nav />
+
 <main>
-	<section id="accueil" class="landing">
+	<section id="accueil" class="hero">
 		<Hero onsee={() => schedulesSection.scrollIntoView({ behavior: 'smooth' })} />
 	</section>
 
-	<section id="equipe" class="second">
+	{#if data.news.length}
+		<section id="actus" class="section band-light">
+			<div class="shell">
+				<Actus news={data.news} />
+			</div>
+		</section>
+	{/if}
+
+	<section id="equipe" class="section band-blue">
+		<div class="shell">
+			<Presentation />
+		</div>
+	</section>
+
+	<section id="galerie" class="band-dark">
 		<Carousel />
-		<Presentation />
 	</section>
 
-	<section id="horaires" class="pad-top" bind:this={schedulesSection}>
-		<Calendar />
+	<section id="horaires" class="section band-light" bind:this={schedulesSection}>
+		<div class="shell">
+			<Calendar />
+		</div>
 	</section>
 
-	<section id="contact" class="pad-top contact">
-		<Contact />
-		<Footer />
+	<section id="contact" class="section band-red">
+		<div class="shell">
+			<Contact />
+		</div>
 	</section>
 </main>
 
+<Footer />
+
 <style lang="scss">
-	:root {
-		background-color: var(--scv-blue);
-	}
-
-	main {
-		background-color: var(--scv-red);
-		color: white;
-
-		section {
-			height: 100vh;
-
-			&.pad-top {
-				padding-top: 7rem;
-			}
-
-			&.contact,
-			&.second {
-				display: grid;
-				grid-template-rows: auto 1fr;
-			}
-
-			&.second {
-				height: auto;
-			}
-
-			&.contact {
-				grid-template-rows: 1fr auto;
-			}
-		}
-
-		.landing {
-			position: relative;
-		}
+	.hero {
+		position: relative;
+		height: 100dvh;
+		overflow: hidden;
 	}
 </style>

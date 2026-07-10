@@ -1,9 +1,38 @@
 <script>
+	import { onMount } from 'svelte';
+
 	import pavel_src from './images/masters/pavel.png';
 	import julien_src from './images/masters/julien.jpg';
 	import olivier_src from './images/masters/olivier_duhouvre.jpg';
 
 	import pdf_download_link from './images/signin.pdf';
+
+	let flash = $state(false);
+
+	/** Amène le bouton d'inscription au centre de l'écran et le met en avant. */
+	function focusInscription() {
+		const el = document.getElementById('inscription');
+		if (!el) return;
+
+		el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+		flash = false;
+		// relance l'animation même si déjà déclenchée
+		requestAnimationFrame(() => {
+			flash = true;
+			setTimeout(() => (flash = false), 2600);
+		});
+	}
+
+	onMount(() => {
+		const handler = () => {
+			if (location.hash === '#inscription') focusInscription();
+		};
+
+		handler();
+		window.addEventListener('hashchange', handler);
+		return () => window.removeEventListener('hashchange', handler);
+	});
 
 	const masters = [
 		{
@@ -19,8 +48,7 @@ Champion de france sambo sportif et combat master,
 			avatar: pavel_src,
 			name: 'Pavel',
 			text: `Initiateur sambo CFS
-2e au championnat régional Occitanie par équipe.
-`
+2e au championnat régional Occitanie par équipe.`
 		},
 		{
 			avatar: julien_src,
@@ -29,6 +57,12 @@ Champion de france sambo sportif et combat master,
 Champion régional sambo sportif 2025
 3e au championnat de France 2025
 2e au championnat par équipe 2025`
+		},
+		// --- Coach placeholder : à compléter (nom, palmarès, photo) ---
+		{
+			avatar: null,
+			name: 'Nouveau coach',
+			text: `Présentation à venir prochainement.`
 		}
 	];
 
@@ -41,152 +75,149 @@ Champion régional sambo sportif 2025
 	}
 </script>
 
-<div class="container">
+<h2 class="section-title">
+	<iconify-icon icon="fa6-solid:people-group"></iconify-icon>
+	L'équipe enseignante
+</h2>
+
+<div class="team">
+	{#each masters as master}
+		<article class="card">
+			{#if master.avatar}
+				<img class="avatar" src={master.avatar} alt={master.name} />
+			{:else}
+				<div class="avatar placeholder">
+					<iconify-icon icon="fa6-solid:user"></iconify-icon>
+				</div>
+			{/if}
+			<div class="name">{master.name}</div>
+			<p>{master.text}</p>
+		</article>
+	{/each}
+</div>
+
+<div class="join">
 	<p>
-		<b>Prêt à rejoindre l’équipe&nbsp;?</b> 
+		<b>Prêt à rejoindre l’équipe&nbsp;?</b>
 		Téléchargez la <b>fiche d’inscription</b>, remplissez-la et <b>apportez-la au club</b>.
+		Pensez aussi au <b>certificat médical</b> et aux autres documents nécessaires.
 	</p>
 
-	<p>
-		Pour valider votre inscription, pensez aussi au <b>certificat médical</b> 
-		et aux autres documents nécessaires.
-	</p>
-	<button on:click={download}>
+	<button id="inscription" class="btn-primary big" class:flash onclick={download}>
 		<iconify-icon icon="fa6-solid:download"></iconify-icon>
 		Télécharger la fiche d'inscription
 	</button>
 
-	<div class="masters">
-		<p class="title">L'équipe enseignante</p>
-
-		<div class="list">
-			{#each masters as master}
-				<div class="master">
-					<img src={master.avatar} alt="" />
-					<div class="infos">
-						<div class="name">{master.name}</div>
-						<p>{master.text}</p>
-					</div>
-				</div>
-			{/each}
-		</div>
-	</div>
-	<p></p>
-	<p>
-  Au-delà des entraînements, le SCV organise des <b>stages</b> pour progresser plus vite 
-  et accompagne ses adhérents en <b>compétition</b>, toujours dans l’<b>esprit d’équipe</b>. 
-  Parce qu’ici, chaque <b>victoire</b> est <b>collective</b> et chaque adhérent compte.
-</p>
+	<p class="muted">
+		Au-delà des entraînements, le SCV organise des <b>stages</b> pour progresser plus vite et accompagne
+		ses adhérents en <b>compétition</b>, toujours dans l’<b>esprit d’équipe</b>. Parce qu’ici, chaque
+		<b>victoire</b> est <b>collective</b> et chaque adhérent compte.
+	</p>
 </div>
 
 <style lang="scss">
-	.container {
-		padding: 2rem;
+	.team {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 15.5rem), 1fr));
+		gap: 1.5rem;
+	}
+
+	.card {
+		background: #fff;
+		color: var(--color-900);
+		border-radius: 1rem;
+		padding: 1.75rem 1.25rem;
 
 		display: flex;
 		flex-direction: column;
-		gap: 1rem;
+		align-items: center;
+		text-align: center;
+		gap: 0.75rem;
 
-		.masters {
-			margin-top: 4rem;
+		box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.18);
 
-			.list {
-				display: flex;
-				flex-direction: column;
-				justify-content: center;
-				gap: 2rem;
+		.avatar {
+			width: 6.5rem;
+			height: 6.5rem;
+			border-radius: 999px;
+			object-fit: cover;
+			flex-shrink: 0;
+			border: 3px solid var(--scv-red);
+		}
+
+		.avatar.placeholder {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			background: var(--color-50);
+			border-style: dashed;
+			border-color: var(--color-300);
+			color: var(--color-300);
+
+			iconify-icon {
+				font-size: 2.5rem;
 			}
+		}
 
-			.title {
-				text-align: center;
-				margin-bottom: 2rem;
-			}
+		.name {
+			font-weight: 700;
+			font-size: 1.15rem;
+		}
 
-			.master {
-				display: flex;
-				align-items: flex-start;
-				gap: 1rem;
-
-				img {
-					$size: 6rem;
-					width: $size;
-					height: $size;
-
-					object-fit: cover;
-
-					flex-shrink: 0;
-
-					border-radius: 1rem;
-				}
-
-				.infos {
-					display: flex;
-					flex-direction: column;
-					gap: 0.35rem;
-
-					.name {
-						font-weight: 600;
-					}
-
-					p {
-						font-size: 0.8rem;
-						font-weight: 300;
-						white-space: pre-wrap;
-						opacity: 0.8;
-					}
-				}
-			}
+		p {
+			font-size: 0.82rem;
+			line-height: 1.45;
+			white-space: pre-wrap;
+			color: var(--color-600);
 		}
 	}
 
-	@media screen and (min-width: 768px) {
-		.container {
-			padding: 10vw 10vw;
+	.join {
+		margin-top: clamp(2.5rem, 6vw, 4rem);
 
-			> p {
-				text-align: center;
-			}
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1.5rem;
+		text-align: center;
 
-			button {
-				width: max-content;
-				margin-inline: auto;
-			}
+		p {
+			max-width: 44rem;
+			line-height: 1.6;
+		}
 
-			.masters {
-				.master {
-					img {
-						height: 6rem;
-						width: 5rem;
-					}
-				}
-			}
+		.muted {
+			opacity: 0.85;
+			font-size: 0.95rem;
 		}
 	}
 
-	@media screen and (min-width: 1024px) {
-		.container {
-			.masters {
-				.list {
-					flex-direction: row;
-					gap: 4rem;
-				}
-			}
-		}
+	/* bouton d'inscription : bien visible + mise en avant au clic sur "S'inscrire" */
+	#inscription.big {
+		font-size: 1.05rem;
+		padding: 0.9rem 1.6rem;
+		scroll-margin-top: 6rem;
 	}
 
-	@media screen and (max-width: 1024px) {
-		.container {
-			.masters {
-				.master {
-					&:nth-child(2n) {
-						flex-direction: row-reverse;
+	#inscription.flash {
+		animation: inscription-pulse 1.3s ease-out 2;
+	}
 
-						.infos {
-							text-align: end;
-						}
-					}
-				}
-			}
+	@keyframes inscription-pulse {
+		0% {
+			box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.9);
+			transform: scale(1);
+		}
+		40% {
+			transform: scale(1.06);
+		}
+		70% {
+			box-shadow: 0 0 0 20px rgba(255, 255, 255, 0);
+		}
+		100% {
+			box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+			transform: scale(1);
 		}
 	}
 </style>

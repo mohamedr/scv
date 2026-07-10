@@ -42,11 +42,14 @@
 	}
 </script>
 
-<div class="container">
-	<h1>Contact</h1>
+<h2 class="section-title">
+	<iconify-icon icon="fa6-solid:paper-plane"></iconify-icon>
+	Contact
+</h2>
 
-	<p>Veuillez remplir le formulaire pour toute demande d'informations.</p>
+<p class="intro">Une question&nbsp;? Remplissez le formulaire, on vous répond au plus vite.</p>
 
+<div class="card">
 	<form onsubmit={submit}>
 		{#if errors}
 			<p transition:slide={{ easing: expoOut }} class="details danger">Oops : {errors.message}</p>
@@ -88,7 +91,7 @@
 			bind:value={payload.message}
 		></textarea>
 
-		<button type="submit" disabled={submitting}>
+		<button class="btn-blue" type="submit" disabled={submitting}>
 			<iconify-icon icon="fa6-solid:paper-plane"></iconify-icon>
 			Envoyer
 		</button>
@@ -96,16 +99,26 @@
 </div>
 
 <style>
-	h1 {
-		margin-bottom: 0.5rem;
+	.section-title {
+		justify-content: center;
 	}
 
-	.container {
+	.intro {
+		text-align: center;
+		margin-bottom: 2rem;
+		opacity: 0.95;
+	}
+
+	.card {
+		max-width: 42rem;
+		margin-inline: auto;
+
+		background: #fff;
+		color: var(--color-900);
+		border-radius: 1rem;
 		padding: 2rem;
 
-		> p {
-			margin-bottom: 1rem;
-		}
+		box-shadow: 0 0.6rem 1.8rem rgba(0, 0, 0, 0.2);
 	}
 
 	form {
@@ -143,9 +156,15 @@
 		grid-area: submit;
 	}
 
-	@media screen and (min-width: 768px) {
-		.container {
-			padding-inline: 20vw;
+	@media screen and (max-width: 560px) {
+		form {
+			grid-template-areas:
+				'details details'
+				'lastname lastname'
+				'firstname firstname'
+				'email email'
+				'message message'
+				'submit submit';
 		}
 	}
 </style>

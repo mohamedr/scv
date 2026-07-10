@@ -111,13 +111,95 @@ button {
 }
 html {
 	scroll-behavior: smooth;
-  }
-  
-  /* accessibilité : pas d’animation si l’utilisateur la réduit */
-  @media (prefers-reduced-motion: reduce) {
-	html { scroll-behavior: auto; }
-  }
+}
 
-  .street {
+body {
+	background-color: #fff;
+	color: var(--color-900);
+}
+
+/* accessibilité : pas d’animation si l’utilisateur la réduit */
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+}
+
+.street {
 	font-size: 1rem;
-  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Design system — layout, rythme de sections (thème rouge + bleu)   */
+/* ------------------------------------------------------------------ */
+
+/* conteneur centré à largeur max */
+.shell {
+	width: min(100% - 2.5rem, 68rem);
+	margin-inline: auto;
+}
+
+/* rythme vertical d'une section */
+.section {
+	padding-block: clamp(3.5rem, 8vw, 6.5rem);
+}
+
+/* bandes de couleur alternées */
+.band-white {
+	background: #fff;
+	color: var(--color-900);
+}
+.band-light {
+	background: var(--color-50);
+	color: var(--color-900);
+}
+.band-red {
+	background: var(--scv-red);
+	color: #fff;
+}
+.band-blue {
+	background: var(--scv-blue);
+	color: #fff;
+}
+.band-dark {
+	background: #14161a;
+	color: #fff;
+}
+
+/* décalage d'ancre pour la nav sticky */
+section[id] {
+	scroll-margin-top: 5rem;
+}
+
+/* titre de section */
+.section-title {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	font-size: clamp(1.75rem, 4vw, 2.4rem);
+	margin-bottom: clamp(2rem, 5vw, 3rem);
+
+	iconify-icon {
+		font-size: 1.1em;
+	}
+}
+
+/* boutons de marque */
+.btn-primary {
+	background: var(--scv-red);
+	color: #fff;
+	font-weight: 600;
+
+	&:hover {
+		filter: brightness(1.05);
+	}
+}
+.btn-blue {
+	background: var(--scv-blue);
+	color: #fff;
+	font-weight: 600;
+
+	&:hover {
+		filter: brightness(1.08);
+	}
+}
