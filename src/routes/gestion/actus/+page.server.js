@@ -22,6 +22,15 @@ export const actions = {
 		);
 	},
 
+	async toggleFeatured({ request }) {
+		const form = await request.formData();
+
+		await db.news.setFeatured(
+			form.get('_id')?.toString() ?? '',
+			form.get('featured')?.toString() === 'true'
+		);
+	},
+
 	async delete({ request }) {
 		const form = await request.formData();
 

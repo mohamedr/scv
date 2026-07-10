@@ -40,6 +40,19 @@
 	}
 
 	/** @param {typeof data.news[number]} item */
+	async function toggleFeatured(item) {
+		busyId = item._id;
+		try {
+			await api.action('?/toggleFeatured', { _id: item._id, featured: String(!item.featured) });
+			await invalidateAll();
+		} catch (error) {
+			snacks.error(error);
+		} finally {
+			busyId = '';
+		}
+	}
+
+	/** @param {typeof data.news[number]} item */
 	async function remove(item) {
 		busyId = item._id;
 		try {
@@ -82,6 +95,12 @@
 				<div class="info">
 					<div class="top">
 						<h3>{item.title}</h3>
+						{#if item.featured}
+							<span class="badge featured">
+								<iconify-icon icon="fa6-solid:star"></iconify-icon>
+								À la une
+							</span>
+						{/if}
 						<span class="badge" class:on={item.visible}>
 							{item.visible ? 'Visible' : 'Masqué'}
 						</span>
@@ -91,6 +110,16 @@
 				</div>
 
 				<div class="actions">
+					<button
+						class="feature"
+						class:on={item.featured}
+						disabled={busyId === item._id || (!item.visible && !item.featured)}
+						title={item.visible ? '' : 'Un article masqué ne peut pas être à la une'}
+						onclick={() => toggleFeatured(item)}
+					>
+						<iconify-icon icon="fa6-{item.featured ? 'solid' : 'regular'}:star"></iconify-icon>
+						{item.featured ? 'À la une' : 'Mettre à la une'}
+					</button>
 					<a class="edit" href="/gestion/actus/editor?id={item._id}">
 						<iconify-icon icon="fa6-solid:pen"></iconify-icon>
 						Modifier
@@ -226,6 +255,15 @@
 							background: var(--success-100);
 							color: var(--on-success-100);
 						}
+
+						&.featured {
+							display: inline-flex;
+							align-items: center;
+							gap: 0.3rem;
+							background: #fef3c7;
+							color: #92660c;
+							font-weight: 600;
+						}
 					}
 				}
 
@@ -234,6 +272,22 @@
 					flex-wrap: wrap;
 					gap: 0.5rem;
 					justify-content: flex-end;
+
+					.feature {
+						background: #fff;
+						border: 1px solid var(--color-200);
+						color: var(--color-600);
+
+						iconify-icon {
+							color: #eab308;
+						}
+
+						&.on {
+							background: #fef3c7;
+							border-color: #fcd34d;
+							color: #92660c;
+						}
+					}
 
 					.edit {
 						display: inline-flex;
