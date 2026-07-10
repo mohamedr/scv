@@ -8,6 +8,99 @@ const scv = mongodb.db('scv');
 
 const messages = scv.collection('messages');
 const users = scv.collection('users');
+const news = scv.collection('news');
+
+/**
+ * @param {import('mongodb').WithId<import('mongodb').Document>} doc
+ */
+function contentOf(doc) {
+	// compat : anciens articles stockés en texte brut (`body`)
+	return doc.content ?? (doc.body ? `<p>${doc.body}</p>` : '');
+}
+
+/**
+ * @param {string} html
+ */
+function stripHtml(html) {
+	return html
+		.replace(/<[^>]*>/g, ' ')
+		.replace(/&nbsp;/g, ' ')
+		.replace(/\s+/g, ' ')
+		.trim();
+}
+
+/**
+ * @param {string} html
+ */
+function excerptOf(html, max = 180) {
+	const text = stripHtml(html);
+	return text.length > max ? text.slice(0, max).trimEnd() + '…' : text;
+}
+
+/**
+ * Première image du contenu (data-URI base64 ou url) — sert de couverture.
+ * @param {string} html
+ */
+function coverOf(html) {
+	const match = html.match(/<img[^>]+src=["']([^"']+)["']/i);
+	return match ? match[1] : null;
+}
+
+/**
+ * Aperçu léger pour les listes (pas le contenu complet).
+ * @param {import('mongodb').WithId<import('mongodb').Document>} doc
+ */
+function mapTeaser(doc) {
+	const content = contentOf(doc);
+	return {
+		_id: doc._id.toString(),
+		title: doc.title,
+		date: doc.date,
+		visible: doc.visible,
+		excerpt: excerptOf(content),
+		cover: coverOf(content)
+	};
+}
+
+/**
+ * Article complet (contenu HTML inclus).
+ * @param {import('mongodb').WithId<import('mongodb').Document>} doc
+ */
+function mapFull(doc) {
+	return {
+		_id: doc._id.toString(),
+		title: doc.title,
+		content: contentOf(doc),
+		date: doc.date,
+		visible: doc.visible
+	};
+}
+
+/**
+ * Nettoyage minimal du HTML admin (retire scripts et handlers inline).
+ * @param {string} html
+ */
+function sanitize(html) {
+	return html
+		.replace(/<script[\s\S]*?<\/script>/gi, '')
+		.replace(/\son\w+\s*=\s*"[^"]*"/gi, '')
+		.replace(/\son\w+\s*=\s*'[^']*'/gi, '');
+}
+
+/**
+ * @param {string} title
+ * @param {string} content
+ */
+function validateNews(title, content) {
+	title = title.trim();
+	content = sanitize(content.trim());
+
+	if (title.length < 3) throw error(400, 'Le titre doit faire au moins 3 caractères.');
+	if (stripHtml(content).length < 3 && !coverOf(content))
+		throw error(400, `L'article ne peut pas être vide.`);
+
+	return { title, content };
+}
 
 export const db = {
 	messages: {
@@ -88,6 +181,95 @@ export const db = {
 		 */
 		findById(_id) {
 			return users.findOne({ _id: new ObjectId(_id) });
+		}
+	},
+	news: {
+		/**
+		 * Aperçus de toutes les actualités, plus récentes en premier (back-office).
+		 */
+		async find() {
+			const out = await news.find().sort({ date: -1 }).toArray();
+			return out.map(mapTeaser);
+		},
+
+		/**
+		 * Aperçus des actualités visibles, plus récentes en premier (public).
+		 */
+		async findVisible() {
+			const out = await news.find({ visible: true }).sort({ date: -1 }).toArray();
+			return out.map(mapTeaser);
+		},
+
+		/**
+		 * Article complet par id (back-office).
+		 * @param {string} _id
+		 */
+		async getById(_id) {
+			if (!ObjectId.isValid(_id)) return null;
+			const doc = await news.findOne({ _id: new ObjectId(_id) });
+			return doc ? mapFull(doc) : null;
+		},
+
+		/**
+		 * Article complet par id, seulement s'il est visible (public).
+		 * @param {string} _id
+		 */
+		async getVisibleById(_id) {
+			if (!ObjectId.isValid(_id)) return null;
+			const doc = await news.findOne({ _id: new ObjectId(_id), visible: true });
+			return doc ? mapFull(doc) : null;
+		},
+
+		/**
+		 * @param {string} title
+		 * @param {string} content
+		 * @returns {Promise<string>} l'id du nouvel article
+		 */
+		async create(title, content) {
+			const clean = validateNews(title, content);
+
+			const result = await news.insertOne({
+				...clean,
+				visible: true,
+				date: new Date()
+			});
+
+			return result.insertedId.toString();
+		},
+
+		/**
+		 * @param {string} _id
+		 * @param {string} title
+		 * @param {string} content
+		 */
+		async update(_id, title, content) {
+			const clean = validateNews(title, content);
+
+			const result = await news.updateOne({ _id: new ObjectId(_id) }, { $set: clean });
+
+			if (!result.matchedCount) throw error(404, `L'article n'a pas été trouvé.`);
+		},
+
+		/**
+		 * @param {string} _id
+		 * @param {boolean} visible
+		 */
+		async setVisible(_id, visible) {
+			const result = await news.updateOne(
+				{ _id: new ObjectId(_id) },
+				{ $set: { visible } }
+			);
+
+			if (!result.matchedCount) throw error(404, `L'actualité n'a pas été trouvée.`);
+		},
+
+		/**
+		 * @param {string} _id
+		 */
+		async delete(_id) {
+			const result = await news.deleteOne({ _id: new ObjectId(_id) });
+
+			if (!result.deletedCount) throw error(404, `L'actualité n'a pas été trouvée.`);
 		}
 	}
 };

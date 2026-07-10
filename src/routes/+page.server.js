@@ -2,6 +2,15 @@ import { db } from '$lib/server/db';
 import { error } from '@sveltejs/kit';
 
 /**
+ * @type {import("./$types").PageServerLoad}
+ */
+export async function load() {
+	return {
+		news: await db.news.findVisible()
+	};
+}
+
+/**
  * @type {import("./$types").Actions}
  */
 export const actions = {
