@@ -4,11 +4,17 @@ import { jwt } from '$lib/server/jwt';
 /**
  * @type {import("./$types").PageServerLoad}
  */
-export async function load({}) {
-	const admin = await db.users.findOneAdmin();
+export async function load({ locals }) {
+	if (!locals.user) {
+		const admin = await db.users.findOneAdmin();
+		return { first: !admin };
+	}
+
+	const [messages, news] = await Promise.all([db.messages.find(), db.news.find()]);
 
 	return {
-		first: !admin
+		recentMessages: messages.filter((m) => !m.archived).slice(0, 4),
+		recentArticles: news.slice(0, 4)
 	};
 }
 

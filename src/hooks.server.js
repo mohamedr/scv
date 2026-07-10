@@ -27,10 +27,10 @@ export async function handle({ event, resolve }) {
 			}
 		}
 
-		if (event.url.pathname === '/gestion') {
-			if (event.locals.user) throw redirect(302, '/gestion/messages');
-		} else {
-			if (!event.locals.user) throw redirect(302, '/gestion');
+		// /gestion = connexion (déconnecté) ou tableau de bord (connecté).
+		// Les autres pages /gestion/* exigent d'être connecté.
+		if (event.url.pathname !== '/gestion' && !event.locals.user) {
+			throw redirect(302, '/gestion');
 		}
 	}
 

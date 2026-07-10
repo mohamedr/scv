@@ -55,7 +55,7 @@
 </script>
 
 <main>
-	<button onclick={() => (hideArchived = !hideArchived)}>
+	<button class="toggle" onclick={() => (hideArchived = !hideArchived)}>
 		<iconify-icon icon="fa6-solid:{hideArchived ? 'eye-slash' : 'eye'}" />
 		{hideArchived ? 'Montrer les messages archivés' : 'Cacher les messages archivés'}
 	</button>
@@ -94,10 +94,15 @@
 
 <style lang="scss">
 	main {
-		padding: 4rem;
-
 		display: grid;
 		gap: 1rem;
+
+		.toggle {
+			justify-self: start;
+			background: #fff;
+			border: 1px solid var(--color-200);
+			color: var(--color-700);
+		}
 
 		.messages {
 			.message {
