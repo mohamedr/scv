@@ -5,9 +5,16 @@ import { error } from '@sveltejs/kit';
  * @type {import("./$types").PageServerLoad}
  */
 export async function load() {
-	return {
-		news: await db.news.findVisible()
-	};
+	// Le site public ne doit pas tomber si la base est injoignable :
+	// en cas d'erreur, on affiche simplement la page sans les actualités.
+	try {
+		return {
+			news: await db.news.findVisible()
+		};
+	} catch (err) {
+		console.error('[home] chargement des actualités impossible :', err);
+		return { news: [] };
+	}
 }
 
 /**

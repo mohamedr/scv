@@ -3,7 +3,7 @@ import { MongoClient, ObjectId } from 'mongodb';
 import { password } from './password';
 import { error } from '@sveltejs/kit';
 
-const mongodb = new MongoClient(MONGO_URI);
+const mongodb = new MongoClient(MONGO_URI, { serverSelectionTimeoutMS: 5000 });
 const scv = mongodb.db('scv');
 
 const messages = scv.collection('messages');
@@ -57,6 +57,7 @@ function mapTeaser(doc) {
 		title: doc.title,
 		date: doc.date,
 		visible: doc.visible,
+		featured: doc.featured ?? false,
 		excerpt: excerptOf(content),
 		cover: coverOf(content)
 	};
@@ -72,7 +73,8 @@ function mapFull(doc) {
 		title: doc.title,
 		content: contentOf(doc),
 		date: doc.date,
-		visible: doc.visible
+		visible: doc.visible,
+		featured: doc.featured ?? false
 	};
 }
 
@@ -193,10 +195,14 @@ export const db = {
 		},
 
 		/**
-		 * Aperçus des actualités visibles, plus récentes en premier (public).
+		 * Aperçus des actualités visibles (public).
+		 * Tri : l'article "à la une" d'abord, sinon les plus récentes.
 		 */
 		async findVisible() {
-			const out = await news.find({ visible: true }).sort({ date: -1 }).toArray();
+			const out = await news
+				.find({ visible: true })
+				.sort({ featured: -1, date: -1 })
+				.toArray();
 			return out.map(mapTeaser);
 		},
 
@@ -231,6 +237,7 @@ export const db = {
 			const result = await news.insertOne({
 				...clean,
 				visible: true,
+				featured: false,
 				date: new Date()
 			});
 
@@ -261,6 +268,27 @@ export const db = {
 			);
 
 			if (!result.matchedCount) throw error(404, `L'actualité n'a pas été trouvée.`);
+		},
+
+		/**
+		 * Met (ou retire) un article "à la une". Une seule à la une à la fois :
+		 * activer un article désactive automatiquement tous les autres.
+		 * @param {string} _id
+		 * @param {boolean} featured
+		 */
+		async setFeatured(_id, featured) {
+			if (!ObjectId.isValid(_id)) throw error(404, `L'article n'a pas été trouvé.`);
+			const id = new ObjectId(_id);
+
+			if (featured) {
+				// on retire la une de tous les autres, puis on l'attribue à celui-ci
+				await news.updateMany({ _id: { $ne: id } }, { $set: { featured: false } });
+				const result = await news.updateOne({ _id: id }, { $set: { featured: true } });
+				if (!result.matchedCount) throw error(404, `L'article n'a pas été trouvé.`);
+			} else {
+				const result = await news.updateOne({ _id: id }, { $set: { featured: false } });
+				if (!result.matchedCount) throw error(404, `L'article n'a pas été trouvé.`);
+			}
 		},
 
 		/**
