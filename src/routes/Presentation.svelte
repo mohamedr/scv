@@ -69,10 +69,9 @@ Champion régional sambo sportif 2025
 
 	function download() {
 		const link = document.createElement('a');
-		link.download = 'fiche_inscription_scv';
+		link.download = 'fiche_inscription_scv_2026_2027.pdf';
 		link.href = pdf_download_link;
 		link.click();
-		link.remove();
 	}
 </script>
 
