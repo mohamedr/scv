@@ -26,11 +26,12 @@
 	},
 	"dependencies": {
 		"@sveltejs/adapter-vercel": "^5.5.2",
+		"@vercel/analytics": "^2.0.1",
 		"iconify-icon": "^2.2.0",
 		"jsonwebtoken": "^9.0.2",
 		"luxon": "^3.6.1",
 		"mongodb": "^6.16.0",
 		"myshades": "^1.1.0",
-		"sanitize-html": "^2.17.7"
+		"sanitize-html": "2.17.4"
 	}
 }
