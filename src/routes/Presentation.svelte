@@ -40,17 +40,18 @@
 		{
 			avatar: jj_src,
 			name: 'Jean-Jacques Teilliet',
-			role: "Président du club",
+			role: 'Président du club',
 			text: ''
 		},
 		{
 			avatar: olivier_src,
 			name: 'Olivier Duhouvre',
 			text: `Enseignant principal du club
-Initiateur sambo CFS, animateur sambo FFL
-Champion de france sambo sportif et combat master,
-5e championnat du monde 2012,
-1ere dan sambo sportif combat et défense`
+Ceinture noire 2e degré de sambo (combat, sportif et défense)
+Animateur sambo FFL, initiateur sambo CFS
+Titulaire de la formation Sambo Wrestling (préparation physique pour les sports de combat)
+Champion de France de sambo sportif et combat master
+5e au championnat du monde 2012`
 		},
 		{
 			avatar: julien_src,
@@ -63,13 +64,16 @@ Champion régional sambo sportif 2025
 		{
 			avatar: pavel_src,
 			name: 'Pavel',
-			text: `Initiateur sambo CFS
-2e au championnat régional Occitanie par équipe.`
+			text: `Ceinture noire de sambo
+Initiateur sambo
+Vice-champion de France 🇫🇷 2026`
 		},
 		{
 			avatar: jean_rock_src,
-			name: 'Jean-Rock',
-			text: 'Initiateur sambo CFS'
+			name: 'Jean-Roch',
+			text: `Ceinture marron de sambo
+Initiateur sambo
+Secrétaire adjoint du club`
 		}
 	];
 
