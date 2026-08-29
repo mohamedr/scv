@@ -146,6 +146,13 @@ function validateNews(title, content) {
 }
 
 export const db = {
+	/**
+	 * Ouvre réellement une connexion et vérifie que le cluster répond.
+	 * Utilisé par le cron Vercel pour éviter la mise en pause du cluster gratuit.
+	 */
+	async ping() {
+		await scv.command({ ping: 1 });
+	},
 	messages: {
 		/**
 		 * Limite chaque expéditeur à trois messages sur quinze minutes.
