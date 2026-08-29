@@ -1,7 +1,7 @@
 <script>
-	import { deserialize } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
 	import { snacks } from '$lib/components/Snacks.svelte';
+	import { api } from '$lib/functions/api';
 
 	/**
 	 * @type {{ data: import("./$types").PageData }}
@@ -13,22 +13,18 @@
 	 */
 	async function submitForm(e) {
 		e.preventDefault();
-		const response = await fetch(e.currentTarget.action, {
-			method: 'POST',
-			body: new FormData(e.currentTarget)
-		});
+		const form = e.currentTarget;
+		const button = form.querySelector('button[type="submit"]');
+		button?.setAttribute('disabled', '');
 
-		const result = deserialize(await response.text());
-
-		switch (result.type) {
-			case 'success':
-				await invalidateAll();
-				break;
-			case 'error':
-				snacks.error(result.error);
-				break;
-			default:
-				break;
+		try {
+			const payload = Object.fromEntries(new FormData(form));
+			await api.action(form.action, payload);
+			await invalidateAll();
+		} catch (error) {
+			snacks.error(error);
+		} finally {
+			button?.removeAttribute('disabled');
 		}
 	}
 

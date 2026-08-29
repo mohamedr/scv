@@ -47,25 +47,36 @@
 
 	export const snacks = {
 		/** @param {string} message */
-		success(message, title = 'Success!') {
+		success(message, title = 'Succès') {
 			push({ type: 'success', title, message });
 		},
 		/** @param {string} message */
-		danger(message, title = 'Oops') {
+		danger(message, title = 'Erreur') {
 			push({ type: 'danger', title, message });
 		},
 
 		/** @param {any} error */
 		error(error, title = 'Erreur') {
-			snacks.danger(error.message, title);
+			const message =
+				typeof error === 'string'
+					? error
+					: typeof error?.message === 'string'
+						? error.message
+						: 'Une erreur inattendue est survenue.';
+
+			snacks.danger(message, title);
 		}
 	};
 </script>
 
 {#if state.snacks.length}
-	<ul>
+	<ul aria-live="polite" aria-label="Notifications">
 		{#each state.snacks as snack (snack)}
-			<li transition:slide|global={{ easing: expoOut }} class={snack.type}>
+			<li
+				transition:slide|global={{ easing: expoOut }}
+				class={snack.type}
+				role={snack.type === 'danger' ? 'alert' : 'status'}
+			>
 				<div class="title">
 					<p>{snack.title}</p>
 

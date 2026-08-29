@@ -1,7 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
 
-	let { value = $bindable('') } = $props();
+	let { value = $bindable(''), invalid = $bindable(false) } = $props();
 
 	/** @type {HTMLDivElement} */
 	let editor;
@@ -16,6 +16,7 @@
 
 	function sync() {
 		value = editor.innerHTML;
+		if (editor.textContent?.trim() || editor.querySelector('img')) invalid = false;
 	}
 
 	/**
@@ -109,19 +110,43 @@
 	}
 </script>
 
-<div class="rich">
+<div class="rich" class:invalid>
 	<div class="toolbar">
-		<button type="button" title="Titre" aria-label="Titre" onmousedown={keepFocus} onclick={() => cmd('formatBlock', 'H2')}>
+		<button
+			type="button"
+			title="Titre"
+			aria-label="Titre"
+			onmousedown={keepFocus}
+			onclick={() => cmd('formatBlock', 'H2')}
+		>
 			<iconify-icon icon="fa6-solid:heading"></iconify-icon>
 		</button>
-		<button type="button" title="Paragraphe" aria-label="Paragraphe" onmousedown={keepFocus} onclick={() => cmd('formatBlock', 'P')}>
+		<button
+			type="button"
+			title="Paragraphe"
+			aria-label="Paragraphe"
+			onmousedown={keepFocus}
+			onclick={() => cmd('formatBlock', 'P')}
+		>
 			<iconify-icon icon="fa6-solid:paragraph"></iconify-icon>
 		</button>
 		<span class="sep"></span>
-		<button type="button" title="Gras" aria-label="Gras" onmousedown={keepFocus} onclick={() => cmd('bold')}>
+		<button
+			type="button"
+			title="Gras"
+			aria-label="Gras"
+			onmousedown={keepFocus}
+			onclick={() => cmd('bold')}
+		>
 			<iconify-icon icon="fa6-solid:bold"></iconify-icon>
 		</button>
-		<button type="button" title="Italique" aria-label="Italique" onmousedown={keepFocus} onclick={() => cmd('italic')}>
+		<button
+			type="button"
+			title="Italique"
+			aria-label="Italique"
+			onmousedown={keepFocus}
+			onclick={() => cmd('italic')}
+		>
 			<iconify-icon icon="fa6-solid:italic"></iconify-icon>
 		</button>
 		<button
@@ -134,7 +159,13 @@
 			<iconify-icon icon="fa6-solid:list-ul"></iconify-icon>
 		</button>
 		<span class="sep"></span>
-		<button type="button" class="img-btn" title="Insérer une image" onmousedown={keepFocus} onclick={() => fileInput.click()}>
+		<button
+			type="button"
+			class="img-btn"
+			title="Insérer une image"
+			onmousedown={keepFocus}
+			onclick={() => fileInput.click()}
+		>
 			<iconify-icon icon="fa6-solid:image"></iconify-icon>
 			Image
 		</button>
@@ -147,6 +178,8 @@
 		bind:this={editor}
 		contenteditable="true"
 		data-placeholder="Rédigez votre article ici… (vous pouvez coller ou glisser des images)"
+		aria-invalid={invalid}
+		aria-describedby={invalid ? 'content-error' : undefined}
 		oninput={sync}
 		onpaste={onPaste}
 		ondragover={(e) => {
@@ -157,13 +190,11 @@
 		ondrop={onDrop}
 	></div>
 
-	<input
-		bind:this={fileInput}
-		type="file"
-		accept="image/*"
-		onchange={onFileChange}
-		hidden
-	/>
+	{#if invalid}
+		<p id="content-error" class="content-error">Ajoutez du texte ou une image à l’article.</p>
+	{/if}
+
+	<input bind:this={fileInput} type="file" accept="image/*" onchange={onFileChange} hidden />
 </div>
 
 <style lang="scss">
@@ -174,6 +205,18 @@
 		border-radius: 0.75rem;
 		overflow: hidden;
 		background: #fff;
+
+		&.invalid {
+			border-color: var(--scv-red);
+			box-shadow: 0 0 0 1px var(--scv-red);
+		}
+	}
+
+	.content-error {
+		padding: 0.75rem 1.25rem;
+		color: var(--scv-red);
+		font-size: 0.82rem;
+		font-weight: 600;
 	}
 
 	.toolbar {

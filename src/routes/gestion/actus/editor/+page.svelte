@@ -15,12 +15,41 @@
 	let content = $state(data.article?.content ?? '');
 	let visible = $state(data.article?.visible ?? true);
 	let saving = $state(false);
+	let titleInvalid = $state(false);
+	let contentInvalid = $state(false);
+
+	/** @type {HTMLInputElement} */
+	let titleInput;
+
+	/** @param {string} html */
+	function hasArticleContent(html) {
+		const parsed = new DOMParser().parseFromString(html, 'text/html');
+		return (
+			(parsed.body.textContent?.trim().length ?? 0) >= 3 || parsed.querySelector('img') !== null
+		);
+	}
 
 	async function save() {
 		if (saving) return;
 
-		if (title.trim().length < 3) {
-			snacks.error('Le titre doit faire au moins 3 caractères.');
+		const cleanTitle = title.trim();
+		if (cleanTitle.length < 3 || cleanTitle.length > 160) {
+			titleInvalid = true;
+			titleInput.focus();
+			snacks.error(
+				cleanTitle.length < 3
+					? 'Le titre doit faire au moins 3 caractères.'
+					: 'Le titre ne peut pas dépasser 160 caractères.'
+			);
+			return;
+		}
+
+		if (!hasArticleContent(content)) {
+			contentInvalid = true;
+			document
+				.querySelector('.rich .area')
+				?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+			snacks.error('Ajoutez du texte ou une image dans le contenu de l’article.');
 			return;
 		}
 
@@ -67,8 +96,29 @@
 	</header>
 
 	<div class="canvas">
-		<input class="title" placeholder="Titre de l'article" bind:value={title} />
-		<RichEditor bind:value={content} />
+		<div class="title-field">
+			<label for="article-title">Titre de l’article</label>
+			<input
+				id="article-title"
+				class="title"
+				class:invalid={titleInvalid}
+				placeholder="Ex. Le SCV au Forum des associations !"
+				maxlength="160"
+				bind:this={titleInput}
+				bind:value={title}
+				aria-invalid={titleInvalid}
+				aria-describedby={titleInvalid ? 'title-error' : undefined}
+				oninput={() => {
+					if (title.trim().length >= 3 && title.trim().length <= 160) titleInvalid = false;
+				}}
+			/>
+			{#if titleInvalid}
+				<p id="title-error" class="title-error">
+					Le titre doit contenir entre 3 et 160 caractères.
+				</p>
+			{/if}
+		</div>
+		<RichEditor bind:value={content} bind:invalid={contentInvalid} />
 	</div>
 </div>
 
@@ -135,21 +185,44 @@
 		flex-direction: column;
 		gap: 1rem;
 
-		.title {
-			border: none;
-			background: transparent;
-			padding: 0.5rem 0;
+		.title-field {
+			display: grid;
+			gap: 0.25rem;
 
-			font-size: clamp(1.6rem, 4vw, 2.2rem);
-			font-weight: 700;
-			color: var(--color-900);
-
-			&:focus {
-				outline: none;
+			label {
+				font-size: 0.8rem;
+				font-weight: 700;
+				color: var(--color-500);
 			}
 
-			&::placeholder {
-				color: var(--color-300);
+			.title {
+				border: none;
+				border-bottom: 2px solid transparent;
+				border-radius: 0;
+				background: transparent;
+				padding: 0.5rem 0;
+
+				font-size: clamp(1.6rem, 4vw, 2.2rem);
+				font-weight: 700;
+				color: var(--color-900);
+
+				&:focus {
+					outline: none;
+				}
+
+				&.invalid {
+					border-bottom-color: var(--scv-red);
+				}
+
+				&::placeholder {
+					color: var(--color-300);
+				}
+			}
+
+			.title-error {
+				color: var(--scv-red);
+				font-size: 0.82rem;
+				font-weight: 600;
 			}
 		}
 	}

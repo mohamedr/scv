@@ -118,7 +118,7 @@ function sanitize(html) {
 			img: ['http', 'https', 'data']
 		},
 		allowProtocolRelative: false,
-		exclusiveFilter(frame) {
+		exclusiveFilter(/** @type {{ tag: string, attribs: Record<string, string> }} */ frame) {
 			const src = frame.attribs.src ?? '';
 			return (
 				frame.tag === 'img' &&
@@ -138,6 +138,7 @@ function validateNews(title, content) {
 	content = sanitize(content.trim());
 
 	if (title.length < 3) throw error(400, 'Le titre doit faire au moins 3 caractères.');
+	if (title.length > 160) throw error(400, 'Le titre ne peut pas dépasser 160 caractères.');
 	if (stripHtml(content).length < 3 && !coverOf(content))
 		throw error(400, `L'article ne peut pas être vide.`);
 

@@ -40,7 +40,7 @@
 		{
 			avatar: jj_src,
 			name: 'Jean-Jacques Teilliet',
-			role: "Président d'honneur du club",
+			role: "Président du club",
 			text: ''
 		},
 		{
