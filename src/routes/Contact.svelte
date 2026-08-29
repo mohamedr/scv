@@ -1,5 +1,4 @@
 <script>
-	import { dev } from '$app/environment';
 	import { snacks } from '$lib/components/Snacks.svelte';
 	import { api } from '$lib/functions/api';
 	import { expoOut } from 'svelte/easing';
@@ -15,7 +14,8 @@
 		firstname: '',
 		lastname: '',
 		email: '',
-		message: ''
+		message: '',
+		website: ''
 	});
 
 	/**
@@ -24,6 +24,7 @@
 	async function submit(e) {
 		e.preventDefault();
 		submitting = true;
+		errors = undefined;
 
 		try {
 			await api.action('?/sendEmail', payload);
@@ -32,8 +33,9 @@
 			payload.lastname = '';
 			payload.email = '';
 			payload.message = '';
+			payload.website = '';
 
-			snacks.success('Votre message à bien été envoyé !', 'Merci');
+			snacks.success('Votre message a bien été envoyé !', 'Merci');
 		} catch (error) {
 			errors = error;
 		} finally {
@@ -55,11 +57,19 @@
 			<p transition:slide={{ easing: expoOut }} class="details danger">Oops : {errors.message}</p>
 		{/if}
 
+		<label class="website" aria-hidden="true">
+			Ne pas remplir ce champ
+			<input name="website" bind:value={payload.website} tabindex="-1" autocomplete="off" />
+		</label>
+
 		<input
 			type="text"
 			placeholder="Nom"
 			name="lastname"
 			bind:value={payload.lastname}
+			minlength="2"
+			maxlength="80"
+			autocomplete="family-name"
 			required
 			disabled={submitting}
 		/>
@@ -69,6 +79,9 @@
 			placeholder="Prénom"
 			name="firstname"
 			bind:value={payload.firstname}
+			minlength="2"
+			maxlength="80"
+			autocomplete="given-name"
 			required
 			disabled={submitting}
 		/>
@@ -78,6 +91,8 @@
 			placeholder="Votre email"
 			name="email"
 			bind:value={payload.email}
+			maxlength="254"
+			autocomplete="email"
 			required
 			disabled={submitting}
 		/>
@@ -89,6 +104,8 @@
 			required
 			disabled={submitting}
 			bind:value={payload.message}
+			minlength="10"
+			maxlength="5000"
 		></textarea>
 
 		<button class="btn-blue" type="submit" disabled={submitting}>
@@ -134,6 +151,14 @@
 
 	.details {
 		grid-area: details;
+	}
+
+	.website {
+		position: absolute;
+		left: -10000px;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
 	}
 
 	[name='firstname'] {

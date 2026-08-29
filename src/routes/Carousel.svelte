@@ -34,7 +34,7 @@
 
 <div class="carousel" use:scroll>
 	{#each images as src}
-		<img {src} />
+		<img {src} alt="" loading="lazy" decoding="async" />
 	{/each}
 </div>
 

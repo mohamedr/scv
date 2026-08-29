@@ -2,6 +2,7 @@ import { MONGO_URI } from '$env/static/private';
 import { MongoClient, ObjectId } from 'mongodb';
 import { password } from './password';
 import { error } from '@sveltejs/kit';
+import sanitizeHtml from 'sanitize-html';
 
 // fail-fast : bascule en mode dégradé en ~5s si la base est injoignable
 // (au lieu du timeout de sélection de serveur par défaut, ~30s).
@@ -14,13 +15,15 @@ const scv = mongodb.db('scv');
 const messages = scv.collection('messages');
 const users = scv.collection('users');
 const news = scv.collection('news');
+const setup = scv.collection('setup');
+const initialAdminLockId = new ObjectId('000000000000000000000001');
 
 /**
  * @param {import('mongodb').WithId<import('mongodb').Document>} doc
  */
 function contentOf(doc) {
 	// compat : anciens articles stockés en texte brut (`body`)
-	return doc.content ?? (doc.body ? `<p>${doc.body}</p>` : '');
+	return sanitize(doc.content ?? (doc.body ? `<p>${doc.body}</p>` : ''));
 }
 
 /**
@@ -84,14 +87,46 @@ function mapFull(doc) {
 }
 
 /**
- * Nettoyage minimal du HTML admin (retire scripts et handlers inline).
+ * Ne conserve que le HTML produit par l'éditeur d'actualités.
  * @param {string} html
  */
 function sanitize(html) {
-	return html
-		.replace(/<script[\s\S]*?<\/script>/gi, '')
-		.replace(/\son\w+\s*=\s*"[^"]*"/gi, '')
-		.replace(/\son\w+\s*=\s*'[^']*'/gi, '');
+	return sanitizeHtml(html, {
+		allowedTags: [
+			'p',
+			'div',
+			'br',
+			'h2',
+			'h3',
+			'strong',
+			'b',
+			'em',
+			'i',
+			'ul',
+			'ol',
+			'li',
+			'blockquote',
+			'a',
+			'img'
+		],
+		allowedAttributes: {
+			a: ['href', 'title'],
+			img: ['src', 'alt', 'title']
+		},
+		allowedSchemes: ['http', 'https', 'mailto'],
+		allowedSchemesByTag: {
+			img: ['http', 'https', 'data']
+		},
+		allowProtocolRelative: false,
+		exclusiveFilter(frame) {
+			const src = frame.attribs.src ?? '';
+			return (
+				frame.tag === 'img' &&
+				src.startsWith('data:') &&
+				!/^data:image\/(?:gif|jpe?g|png|webp);base64,/i.test(src)
+			);
+		}
+	});
 }
 
 /**
@@ -111,6 +146,22 @@ function validateNews(title, content) {
 
 export const db = {
 	messages: {
+		/**
+		 * Limite chaque expéditeur à trois messages sur quinze minutes.
+		 * Le hash permet de ne pas conserver l'adresse IP en clair.
+		 * @param {string} senderHash
+		 */
+		async assertCanSend(senderHash) {
+			const since = new Date(Date.now() - 15 * 60 * 1000);
+			const recent = await messages.countDocuments({ senderHash, date: { $gte: since } });
+
+			if (recent >= 3) {
+				throw error(429, {
+					message: 'Trop de messages envoyés. Merci de réessayer dans quelques minutes.'
+				});
+			}
+		},
+
 		async find() {
 			const out = await messages.find().toArray();
 			return out.map((doc) => ({
@@ -170,17 +221,39 @@ export const db = {
 
 			if (username.length < 4)
 				throw error(400, `Le nom d'utilisateur doit faire au moins 4 caractères.`);
-			if (pass.length < 4) throw error(400, 'Le mot de passe doit faire au moins 4 caractères.');
+			if (username.length > 80)
+				throw error(400, `Le nom d'utilisateur ne peut pas dépasser 80 caractères.`);
+			if (pass.length < 10) throw error(400, 'Le mot de passe doit faire au moins 10 caractères.');
+			if (pass.length > 200) throw error(400, 'Le mot de passe est trop long.');
+
+			// Cette action ne sert qu'au tout premier démarrage du site.
+			if (await users.findOne({ roles: 'admin' })) {
+				throw error(403, 'Le compte administrateur existe déjà.');
+			}
 
 			const user = await users.findOne({ username });
 
 			if (user) throw error(400, `Ce nom d'utilisateur est déjà pris.`);
 
-			await users.insertOne({
-				roles: ['admin'],
-				username,
-				password: await password.hash(pass)
-			});
+			// Verrou atomique : deux requêtes simultanées ne peuvent pas créer deux admins.
+			try {
+				await setup.insertOne({ _id: initialAdminLockId, date: new Date() });
+			} catch (err) {
+				if (/** @type {{ code?: number }} */ (err).code === 11000)
+					throw error(403, 'Le compte administrateur existe déjà.');
+				throw err;
+			}
+
+			try {
+				await users.insertOne({
+					roles: ['admin'],
+					username,
+					password: await password.hash(pass)
+				});
+			} catch (err) {
+				await setup.deleteOne({ _id: initialAdminLockId });
+				throw err;
+			}
 		},
 
 		/**

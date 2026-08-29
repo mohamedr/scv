@@ -1,3 +1,7 @@
+<script>
+	const currentYear = new Date().getFullYear();
+</script>
+
 <footer>
 	<nav>
 		<a href="#accueil">Accueil</a>
@@ -15,7 +19,18 @@
 		</a>
 	</div>
 
-	<p>&copy; 2025 PivoMed Design — Tous droits réservés.</p>
+	<p>&copy; {currentYear} PivoMed Design — Tous droits réservés.</p>
+	<!-- <p class="credit">
+		Photo d’accueil :
+		<a
+			href="https://commons.wikimedia.org/wiki/File:Sambo_at_the_2015_European_Games.jpg"
+			target="_blank"
+			rel="noopener">President.az</a
+		>, sous licence
+		<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener"
+			>CC BY 4.0</a
+		>.
+	</p>-->
 
 	<a href="#accueil" class="back-to-top" aria-label="Remonter en haut">↑</a>
 </footer>

@@ -5,11 +5,7 @@
 	let { onsee } = $props();
 </script>
 
-<img
-	class="bg"
-	src="https://upload.wikimedia.org/wikipedia/commons/1/13/Sambo_at_the_2015_European_Games.jpg"
-	alt=""
-/>
+<img class="bg" src="/images/hero-sambo.jpg" alt="" fetchpriority="high" />
 
 <div class="heading">
 	<h1>
@@ -25,11 +21,10 @@
 		</p>
 	</div>
 	<p>
-			Le <b>SCV</b>, c’est un club <b>dynamique</b> où chacun trouve sa place : 
-			en <b>compétition</b> comme en <b>loisir</b>. 
-			Dans un <b>esprit familial</b>, nous mettons en avant 
-			l’<b>entraide</b>, le <b>respect</b> et le <b>dépassement de soi</b>. 
-			Rejoignez-nous et venez révéler votre potentiel sur le tapis&nbsp;!
+		Le <b>SCV</b>, c’est un club <b>dynamique</b> où chacun trouve sa place : en <b>compétition</b>
+		comme en <b>loisir</b>. Dans un <b>esprit familial</b>, nous mettons en avant l’<b>entraide</b>,
+		le <b>respect</b> et le <b>dépassement de soi</b>. Rejoignez-nous et venez révéler votre
+		potentiel sur le tapis&nbsp;!
 	</p>
 	<div class="buttons">
 		<button class="btn-primary" onclick={onsee}>

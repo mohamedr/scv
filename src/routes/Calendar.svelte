@@ -15,20 +15,33 @@
 	const week = [
 		{
 			name: 'Lundi',
-			events: []
+			events: [
+				{
+					id: 'training',
+					title: 'Sambo training\n(Prépa physique – dès 16 ans)',
+					start: oneHour * 18,
+					end: oneHour * 19
+				},
+				{
+					id: 'adult',
+					title: 'Sambo adultes\n(Dès 18 ans)',
+					start: oneHour * 19,
+					end: oneHour * 20 + oneMinute * 30
+				}
+			]
 		},
 		{
 			name: 'Mardi',
 			events: [
 				{
 					id: 'young',
-					title: 'Enfants',
+					title: 'Enfants / Ados',
 					start: oneHour * 17 + oneMinute * 45,
 					end: oneHour * 18 + oneMinute * 45
 				},
 				{
 					id: 'adult',
-					title: 'Adultes',
+					title: 'Adultes\n(Dès 18 ans)',
 					start: oneHour * 18 + oneMinute * 45,
 					end: oneHour * 20
 				}
@@ -42,9 +55,15 @@
 			name: 'Jeudi',
 			events: [
 				{
-					id: 'adult',
-					title: 'Adultes',
-					start: oneHour * 17 + oneMinute * 30,
+					id: 'baby',
+					title: 'Baby Sambo\n(4 / 6 ans)',
+					start: oneHour * 17 + oneMinute * 15,
+					end: oneHour * 18
+				},
+				{
+					id: 'young',
+					title: 'Sambo enfants / Ados',
+					start: oneHour * 18,
 					end: oneHour * 19 + oneMinute * 30
 				}
 			]
@@ -55,26 +74,7 @@
 		},
 		{
 			name: 'Samedi',
-			events: [
-				{
-					id: 'baby',
-					title: 'Baby Sambo\n(4 / 5 ans)',
-					start: oneHour * 14,
-					end: oneHour * 15
-				},
-				{
-					id: 'young',
-					title: 'Enfants',
-					start: oneHour * 18,
-					end: oneHour * 19 + oneMinute * 30
-				},
-				{
-					id: 'adult',
-					title: 'Adultes',
-					start: oneHour * 18,
-					end: oneHour * 20
-				}
-			]
+			events: []
 		},
 		{
 			name: 'Dimanche',
@@ -95,13 +95,18 @@
 		baby: {
 			bg: 'var(--scv-cyan)',
 			fg: 'white'
+		},
+		training: {
+			bg: '#6b55b4',
+			fg: 'white'
 		}
 	};
 
 	const groups = [
 		{ id: 'baby', label: 'Baby Sambo' },
-		{ id: 'young', label: 'Enfants' },
-		{ id: 'adult', label: 'Adultes' }
+		{ id: 'young', label: 'Enfants / Ados' },
+		{ id: 'adult', label: 'Adultes' },
+		{ id: 'training', label: 'Sambo training' }
 	];
 </script>
 
@@ -109,6 +114,8 @@
 	<iconify-icon icon="fa6-solid:calendar-days"></iconify-icon>
 	Horaires des entraînements
 </h2>
+
+<p class="season">Saison 2026–2027</p>
 
 <div class="legend">
 	{#each groups as group}
@@ -142,6 +149,18 @@
 	.section-title {
 		color: var(--scv-red);
 		justify-content: center;
+		margin-bottom: 0.75rem;
+	}
+
+	.season {
+		width: max-content;
+		margin: 0 auto 1.75rem;
+		padding: 0.35rem 0.8rem;
+		border-radius: 999px;
+		background: color-mix(in srgb, var(--scv-red) 12%, white);
+		color: var(--scv-red);
+		font-size: 0.85rem;
+		font-weight: 700;
 	}
 
 	.legend {

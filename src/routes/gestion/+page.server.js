@@ -1,5 +1,6 @@
 import { db } from '$lib/server/db';
 import { jwt } from '$lib/server/jwt';
+import { error } from '@sveltejs/kit';
 
 /**
  * @type {import("./$types").PageServerLoad}
@@ -33,7 +34,11 @@ export const actions = {
 		cookies.set('token', token, { path: '/' });
 	},
 
-	async create({ request }) {
+	async create({ request, locals }) {
+		if (locals.user || (await db.users.findOneAdmin())) {
+			throw error(403, 'Le compte administrateur existe déjà.');
+		}
+
 		const form = await request.formData();
 
 		await db.users.create(

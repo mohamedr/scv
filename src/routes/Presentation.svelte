@@ -1,10 +1,11 @@
 <script>
 	import { onMount } from 'svelte';
 
-	import pavel_src from './images/masters/pavel.png';
+	import pavel_src from './images/masters/pavel-optimized.jpg';
 	import julien_src from './images/masters/julien.jpg';
 	import olivier_src from './images/masters/olivier_duhouvre.jpg';
 	import jj_src from './images/masters/jean-jacques.jpg';
+	import jean_rock_src from './images/masters/jean-rock-optimized.jpg';
 
 	import pdf_download_link from './images/signin.pdf';
 
@@ -37,6 +38,12 @@
 
 	const masters = [
 		{
+			avatar: jj_src,
+			name: 'Jean-Jacques Teilliet',
+			role: "Président d'honneur du club",
+			text: ''
+		},
+		{
 			avatar: olivier_src,
 			name: 'Olivier Duhouvre',
 			text: `Enseignant principal du club
@@ -44,12 +51,6 @@ Initiateur sambo CFS, animateur sambo FFL
 Champion de france sambo sportif et combat master,
 5e championnat du monde 2012,
 1ere dan sambo sportif combat et défense`
-		},
-		{
-			avatar: pavel_src,
-			name: 'Pavel',
-			text: `Initiateur sambo CFS
-2e au championnat régional Occitanie par équipe.`
 		},
 		{
 			avatar: julien_src,
@@ -60,10 +61,15 @@ Champion régional sambo sportif 2025
 2e au championnat par équipe 2025`
 		},
 		{
-			avatar: jj_src,
-			name: 'Jean-Jacques Teilliet',
-			role: "Président d'honneur du club",
-			text: ''
+			avatar: pavel_src,
+			name: 'Pavel',
+			text: `Initiateur sambo CFS
+2e au championnat régional Occitanie par équipe.`
+		},
+		{
+			avatar: jean_rock_src,
+			name: 'Jean-Rock',
+			text: 'Initiateur sambo CFS'
 		}
 	];
 
@@ -84,7 +90,7 @@ Champion régional sambo sportif 2025
 	{#each masters as master}
 		<article class="card">
 			{#if master.avatar}
-				<img class="avatar" src={master.avatar} alt={master.name} />
+				<img class="avatar" src={master.avatar} alt={master.name} loading="lazy" decoding="async" />
 			{:else}
 				<div class="avatar placeholder">
 					<iconify-icon icon="fa6-solid:user"></iconify-icon>
@@ -104,8 +110,8 @@ Champion régional sambo sportif 2025
 <div class="join">
 	<p>
 		<b>Prêt à rejoindre l’équipe&nbsp;?</b>
-		Téléchargez la <b>fiche d’inscription</b>, remplissez-la et <b>apportez-la au club</b>.
-		Pensez aussi au <b>certificat médical</b> et aux autres documents nécessaires.
+		Téléchargez la <b>fiche d’inscription</b>, remplissez-la et <b>apportez-la au club</b>. Pensez
+		aussi au <b>certificat médical</b> et aux autres documents nécessaires.
 	</p>
 
 	<button id="inscription" class="btn-primary big" class:flash onclick={download}>
@@ -114,20 +120,24 @@ Champion régional sambo sportif 2025
 	</button>
 
 	<p class="muted">
-		Au-delà des entraînements, le SCV organise des <b>stages</b> pour progresser plus vite et accompagne
-		ses adhérents en <b>compétition</b>, toujours dans l’<b>esprit d’équipe</b>. Parce qu’ici, chaque
+		Au-delà des entraînements, le SCV organise des <b>stages</b> pour progresser plus vite et
+		accompagne ses adhérents en <b>compétition</b>, toujours dans l’<b>esprit d’équipe</b>. Parce
+		qu’ici, chaque
 		<b>victoire</b> est <b>collective</b> et chaque adhérent compte.
 	</p>
 </div>
 
 <style lang="scss">
 	.team {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(min(100%, 15.5rem), 1fr));
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
 		gap: 1.5rem;
 	}
 
 	.card {
+		flex: 0 1 17rem;
+
 		background: #fff;
 		color: var(--color-900);
 		border-radius: 1rem;
@@ -181,6 +191,12 @@ Champion régional sambo sportif 2025
 			line-height: 1.45;
 			white-space: pre-wrap;
 			color: var(--color-600);
+		}
+	}
+
+	@media (max-width: 480px) {
+		.card {
+			flex-basis: 100%;
 		}
 	}
 

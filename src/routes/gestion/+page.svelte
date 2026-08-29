@@ -59,7 +59,15 @@
 			<form method="POST" action={data.first ? '?/create' : '?/login'} onsubmit={submitForm}>
 				<label>
 					<span>Nom d'utilisateur</span>
-					<input type="text" name="username" placeholder="admin" autocomplete="username" />
+					<input
+						type="text"
+						name="username"
+						placeholder="admin"
+						autocomplete="username"
+						minlength={data.first ? 4 : undefined}
+						maxlength="80"
+						required
+					/>
 				</label>
 				<label>
 					<span>Mot de passe</span>
@@ -68,11 +76,15 @@
 						name="password"
 						placeholder="••••••••"
 						autocomplete={data.first ? 'new-password' : 'current-password'}
+						minlength={data.first ? 10 : undefined}
+						maxlength="200"
+						required
 					/>
 				</label>
 
 				<button class="btn-primary" type="submit">
-					<iconify-icon icon="fa6-solid:{data.first ? 'user-plus' : 'right-to-bracket'}"></iconify-icon>
+					<iconify-icon icon="fa6-solid:{data.first ? 'user-plus' : 'right-to-bracket'}"
+					></iconify-icon>
 					{data.first ? 'Créer le compte' : 'Se connecter'}
 				</button>
 			</form>
