@@ -128,7 +128,10 @@
 				</header>
 				{#each data.recentMessages ?? [] as m (m._id)}
 					<div class="row">
-						<div class="who">{m.firstname} {m.lastname}</div>
+						<div class="row-head">
+							<div class="who">{m.firstname} {m.lastname}</div>
+							<time datetime={new Date(m.date).toISOString()}>{formatDate(m.date)}</time>
+						</div>
 						<div class="excerpt">{m.message}</div>
 					</div>
 				{:else}
@@ -353,6 +356,19 @@
 			border-top: 1px solid var(--color-100);
 			text-decoration: none;
 			color: inherit;
+
+			.row-head {
+				display: flex;
+				align-items: baseline;
+				justify-content: space-between;
+				gap: 0.75rem;
+
+				time {
+					flex-shrink: 0;
+					color: var(--color-400);
+					font-size: 0.75rem;
+				}
+			}
 
 			.who {
 				font-weight: 600;

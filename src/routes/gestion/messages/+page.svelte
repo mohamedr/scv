@@ -25,7 +25,7 @@
 	});
 
 	const filteredMessages = $derived.by(() => {
-		let out = messages.toSorted();
+		let out = messages.toSorted((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
 		if (hideArchived) {
 			out = out.filter((m) => !m.archived);
@@ -33,6 +33,17 @@
 
 		return out;
 	});
+
+	/** @param {string | Date} date */
+	function formatDate(date) {
+		return new Date(date).toLocaleString('fr-FR', {
+			day: 'numeric',
+			month: 'long',
+			year: 'numeric',
+			hour: '2-digit',
+			minute: '2-digit'
+		});
+	}
 
 	/**
 	 * @param {typeof messages[number]} message
@@ -68,9 +79,15 @@
 				animate:flip={{ easing: expoOut }}
 				transition:scale={{ easing: expoOut }}
 			>
-				<div class="email">
-					<iconify-icon icon="fa6-solid:envelope"></iconify-icon>
-					{message.email}
+				<div class="meta">
+					<div class="email">
+						<iconify-icon icon="fa6-solid:envelope"></iconify-icon>
+						{message.email}
+					</div>
+					<time datetime={new Date(message.date).toISOString()}>
+						<iconify-icon icon="fa6-regular:clock"></iconify-icon>
+						{formatDate(message.date)}
+					</time>
 				</div>
 				<div class="fullname">{message.firstname} {message.lastname}</div>
 				<div class="content">{message.message}</div>
@@ -144,6 +161,23 @@
 					font-style: italic;
 				}
 
+				.meta {
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					gap: 0.75rem;
+					padding-right: 1.5rem;
+
+					time {
+						display: inline-flex;
+						align-items: center;
+						gap: 0.3rem;
+						flex-shrink: 0;
+						color: var(--color-500);
+						font-size: 0.8rem;
+					}
+				}
+
 				.content {
 					margin-top: 1rem;
 					font-size: 0.9rem;
@@ -158,6 +192,13 @@
 				font-style: italic;
 				color: var(--color-400);
 			}
+		}
+	}
+
+	@media screen and (max-width: 560px) {
+		.messages .message .meta {
+			align-items: flex-start;
+			flex-direction: column;
 		}
 	}
 </style>

@@ -172,14 +172,19 @@ export const db = {
 
 		async find() {
 			const out = await messages.find().toArray();
-			return out.map((doc) => ({
-				_id: doc._id.toString(),
-				email: doc.email,
-				firstname: doc.firstname,
-				lastname: doc.lastname,
-				message: doc.message,
-				archived: doc.archived
-			}));
+			return out
+				.map((doc) => ({
+					_id: doc._id.toString(),
+					email: doc.email,
+					firstname: doc.firstname,
+					lastname: doc.lastname,
+					message: doc.message,
+					archived: doc.archived,
+					// Les anciens messages n'avaient pas de champ `date` : l'ObjectId
+					// permet de retrouver leur date de création sans migration.
+					date: doc.date ? new Date(doc.date) : doc._id.getTimestamp()
+				}))
+				.sort((a, b) => b.date.getTime() - a.date.getTime());
 		},
 
 		/**
