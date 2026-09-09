@@ -74,7 +74,14 @@
 		},
 		{
 			name: 'Samedi',
-			events: []
+			events: [
+				{
+					id: 'training',
+					title: 'Entraînement libre / Stages',
+					start: oneHour * 18,
+					end: oneHour * 20
+				}
+			]
 		},
 		{
 			name: 'Dimanche',
